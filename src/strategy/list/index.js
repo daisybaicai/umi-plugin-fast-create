@@ -16,7 +16,7 @@ import { handleBabelTravese } from '../../traverse';
  * @param {*} jsonData 
  */
 async function handleApi(absoultPath, jsonData) {
-  const PrefixPath = absoultPath + '/service/';
+  const PrefixPath = absoultPath + '/services/';
   const fileName = 'api.js';
 
   // 1. 创建service

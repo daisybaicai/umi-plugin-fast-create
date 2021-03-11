@@ -28,7 +28,7 @@ export async function  handleBabelTravese(url, jsonData) {
   const templateText = `
   const vtm_model = {
     effects: {
-      *${fetchName}({ payload }, { call }) {
+      *${fetchName}({ payload }, { call, put }) {
         const response = yield call(${fetchName}, payload);
         if (response && response.code === 0) {
           yield put({
