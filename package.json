@@ -10,7 +10,8 @@
   "repository": "/umi-plugin-fast-create",
   "scripts": {
     "start": "cross-env APP_ROOT=example umi dev",
-    "build": "father-build --watch",
+    "watch": "father-build --watch",
+    "build": "rm -rf dist lib && father-build",
     "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
     "test": "umi-test",
     "test:coverage": "umi-test --coverage",
