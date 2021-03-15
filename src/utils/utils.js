@@ -42,7 +42,7 @@ export function getLastStr(path) {
 
 /**
  * 转化columns
- * @param {*} properties 
+ * @param {*} properties
  */
 export function getColumns(properties) {
   const columns = [];
@@ -55,20 +55,45 @@ export function getColumns(properties) {
   return JSON.stringify(columns);
 }
 
-
 /**
  * 转换Form.Items
- * @param {*} params 
+ * @param {*} params
  */
 export function getFormItems(params) {
   let res = ``;
-  params.forEach((item) => {
+  params.forEach(item => {
     res += `
       <Col span={6}>
         <Form.Item label="${item.description}" name="${item.name}">
           <Input placeholder="请输入" />
         </Form.Item>
       </Col>
+`;
+  });
+  return res;
+}
+
+/**
+ * 转换Form.Items
+ * @param {*} params
+ */
+export function getFormItemsInForm(params) {
+  let res = ``;
+  params.forEach(item => {
+    res += `
+    <Form.Item
+    name="${item.name}"
+    label="${item.description}"
+    rules={[
+      {
+        required: true,
+        message: '请输入${item.description}',
+      },
+    ]}
+    validateFirst
+  >
+    <Input placeholder="请输入${item.description}" autoComplete="off" />
+  </Form.Item>
 `;
   });
   return res;
