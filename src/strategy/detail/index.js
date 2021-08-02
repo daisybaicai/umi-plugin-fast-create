@@ -3,11 +3,12 @@ import schema from './schema';
 import { getStat, dirExists, writeFile, readFile } from '../../utils/fs';
 import {getLastStr, prettify, urlTransform} from '../../utils/utils';
 import defaultApiTemplate  from '../../templates/default/api';
+import defaultInfoContentTemplate  from '../../templates/default/InfoContent';
 import defaultApiModel  from '../../templates/default/model';
-import defaultListTempalte  from '../../templates/default/list';
+import defaultDetailTempalte  from '../../templates/default/detail';
 
 import createApi from '../../templates/create/api';
-import { handleBabelTravese } from '../../traverse';
+import { handleBabelTravese } from '../../traverse/detail';
 
 
 /**
@@ -33,6 +34,25 @@ async function handleApi(absoultPath, jsonData) {
   const createApiText = createApi(jsonData.api);
   // 拼接
   await writeFile(PrefixPath + fileName, prettify(`${templateContent} ${createApiText}`))
+}
+
+/**
+ * handleDepend
+ * @param {*} absoultPath 
+ * @param {*} jsonData 
+ */
+async function handleDepend(absoultPath, jsonData) {
+  const PrefixPath = absoultPath + '/components/InfoContent';
+  const fileName = 'index.js';
+
+  // 1. 创建service
+  const isExist = await getStat(PrefixPath + fileName);
+  if(!isExist) {
+    // 新建路径
+    const stats = await dirExists(PrefixPath);
+    // 创建文件，加入默认模板
+    const file = await writeFile(PrefixPath + fileName, defaultInfoContentTemplate)
+  }
 }
 
 /**
@@ -83,17 +103,17 @@ async function handleComponents(absoultPath, jsonData) {
   const fetchName = `fetch` + urlTransform(jsonData.api.url);
   const saveName = `save` + urlTransform(jsonData.api.url);
   const clearName = `clear` + urlTransform(jsonData.api.url);
-  const stateName =  urlTransform(jsonData.api.url) + 'list';
+  const stateName =  urlTransform(jsonData.api.url) + 'detail';
 
   const payload = {
     modelName, fetchName, clearName, stateName, params: api.params, response: api.response
   }
 
   // 拼接
-  await writeFile(PrefixPath + fileName, defaultListTempalte(payload))
+  await writeFile(PrefixPath + fileName, defaultDetailTempalte(payload))
 }
 
-const handleList =  async (api, text) => {
+const handleDetail =  async (api, text) => {
   var jsonData = eval('(' + text + ')');
 
   // 类型处理
@@ -103,17 +123,17 @@ const handleList =  async (api, text) => {
   // 校验数据的合理性
   var v = new Validator();
   const r = v.validate(jsonData, schema);
-  console.log('e',jsonData);
-  console.log('r', r);
 
-    const absoultPath = api.paths.absSrcPath;
+  const absoultPath = api.paths.absSrcPath;
 
   if (r.valid) {
     // 1. 创建api
     handleApi(absoultPath, jsonData)
     // 2. 创建model
     handleModel(absoultPath, jsonData)
-    // 3. 创建components
+    // 3. 创建依赖的dep
+    handleDepend(absoultPath, jsonData);
+    // 4. 创建components
     handleComponents(absoultPath, jsonData)
 
   } else {
@@ -121,7 +141,7 @@ const handleList =  async (api, text) => {
   }
 };
 
-export default handleList;
+export default handleDetail;
 
 /**
  * 

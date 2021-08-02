@@ -1,5 +1,6 @@
 import handleList from './list/index';
 import handleForm from './form/index';
+import handleDetail from './detail/index';
 
 const strategy = {
     "form": function(api,text) {

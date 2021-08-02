@@ -44,7 +44,7 @@ export function getLastStr(path) {
  * 转化columns
  * @param {*} properties
  */
-export function getColumns(properties) {
+export function getColumns(properties = {}) {
   const columns = [];
   Object.keys(properties).map(key => {
     columns.push({

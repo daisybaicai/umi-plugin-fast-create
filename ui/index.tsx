@@ -1,11 +1,13 @@
 import { Button, Input, Modal } from 'antd';
 import { IUiApi } from '@umijs/ui-types';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { setLocalStorage } from './utils/utils';
+import SelectTable from './components/SelectTables';
 
 function OpenCompents(props: any) {
-  const {type = '', handleText = () => {}} = props;
+  const { type = '', handleText = () => {} } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
-  
+
   const [value, setValue] = useState('');
 
   const showModal = () => {
@@ -93,7 +95,7 @@ function OpenCompents(props: any) {
       componentsName: "login",
       componentsPath: "/Login/List/",
     }
-`)
+`);
   };
 
   const handleOk = () => {
@@ -109,7 +111,7 @@ function OpenCompents(props: any) {
   };
 
   return (
-    <div>
+    <div style={{ display: 'inline-block' }}>
       <Button onClick={showModal}>{type}</Button>
       <Modal
         title={type}
@@ -117,7 +119,11 @@ function OpenCompents(props: any) {
         onOk={handleOk}
         onCancel={handleCancel}
       >
-        <Input.TextArea rows={10} value={value} onChange={(e: any) => setValue(e.target.value)}></Input.TextArea>
+        <Input.TextArea
+          rows={10}
+          value={value}
+          onChange={(e: any) => setValue(e.target.value)}
+        ></Input.TextArea>
       </Modal>
     </div>
   );
@@ -126,18 +132,29 @@ function OpenCompents(props: any) {
 export default (api: IUiApi) => {
   const { callRemote } = api;
 
-  function PluginPanel() {    
+  function PluginPanel() {
     return (
       <>
         <div>
+          <Button
+            onClick={async (text: any) => {
+              const { data } = await callRemote({
+                type: 'org.plugin.swagger.create',
+              });
+              setLocalStorage('swagger-data', data);
+              alert(data);
+            }}
+          >
+            生成swagger数据流
+          </Button>
           <OpenCompents
             type="list"
             handleText={async (text: any) => {
               await callRemote({
                 type: 'org.plugin.template.list',
                 payload: {
-                  text
-                }
+                  text,
+                },
               });
             }}
           />
@@ -147,8 +164,8 @@ export default (api: IUiApi) => {
               await callRemote({
                 type: 'org.plugin.template.form',
                 payload: {
-                  text
-                }
+                  text,
+                },
               });
             }}
           />
@@ -158,16 +175,16 @@ export default (api: IUiApi) => {
               await callRemote({
                 type: 'org.plugin.template.detail',
                 payload: {
-                  text
-                }
+                  text,
+                },
               });
             }}
           />
+          <SelectTable api={api}/>
         </div>
       </>
     );
   }
-
 
   api.addPanel({
     title: 'demo',
