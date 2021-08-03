@@ -61,7 +61,7 @@ async function handleDepend(absoultPath, jsonData) {
  * @param {*} jsonData 
  */
 async function handleModel(absoultPath, jsonData) {
-  const PrefixPath = absoultPath + '/model/';
+  const PrefixPath = absoultPath + '/models/';
   const modelName = jsonData.modelName;
   const fileName = `${modelName}.js`;
 
