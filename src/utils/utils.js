@@ -1,7 +1,7 @@
 import prettier from 'prettier';
 
-export function urlTransform(url, prefix = '/api') {
-  const nameStr = url.slice(prefix);
+export function urlTransform(url, prefix = '/api/v1') {
+  const nameStr = url.split(prefix)[1];
   return toHump(nameStr);
 }
 

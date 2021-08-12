@@ -21,7 +21,7 @@ export async function  handleBabelTravese(url, jsonData) {
   const fetchName = `fetch` + urlTransform(jsonData.api.url);
   const saveName = `save` + urlTransform(jsonData.api.url);
   const clearName = `clear` + urlTransform(jsonData.api.url);
-  const stateName =  urlTransform(jsonData.api.url) + 'list';
+  const stateName =  urlTransform(jsonData.api.url) + 'List';
 
 
   // 替换模板内容然后获取指定内容块
@@ -33,7 +33,10 @@ export async function  handleBabelTravese(url, jsonData) {
         if (response && response.code === 0) {
           yield put({
             type: '${saveName}',
-            payload: response.data || {},
+            payload: {
+              data: response.data || {},
+              pagination: payload || {},
+            },
           });
           return Promise.resolve();
         }
@@ -47,9 +50,14 @@ export async function  handleBabelTravese(url, jsonData) {
   const vtm_model = {
     reducers: {
       ${saveName}(state, { payload }) {
+        const { data = {}, pagination = {} } = payload;
+        const { items = [] } = data;
         return {
           ...state,
-          ${stateName}: payload,
+          ${stateName}: {
+            ...data,
+            items: addIdNumber(items, pagination),
+          },
         };
       },
       ${clearName}(state) {

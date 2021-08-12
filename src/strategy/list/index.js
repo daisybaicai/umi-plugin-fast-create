@@ -67,13 +67,17 @@ async function handleModel(absoultPath, jsonData) {
  */
 async function handleComponents(absoultPath, jsonData) {
   const PrefixPath = absoultPath + '/pages' + jsonData.componentsPath;
-  const fileName = 'index.js';
+  const str = PrefixPath;
+  var index = str.lastIndexOf("\/");  
+ 
+const fileName  = str.substring(index + 1, str.length);
+  // const fileName = PrefixPath.;
 
   // 1. 创建service
   const isExist = await getStat(PrefixPath + fileName);
   if(!isExist) {
     // 新建路径
-    const stats = await dirExists(PrefixPath);
+    const stats = await dirExists(PrefixPath.slice(0, index));
     // // 创建文件，加入默认模板
     // const file = await writeFile(PrefixPath + fileName, defaultApiTemplate)
   }
@@ -83,14 +87,14 @@ async function handleComponents(absoultPath, jsonData) {
   const fetchName = `fetch` + urlTransform(jsonData.api.url);
   const saveName = `save` + urlTransform(jsonData.api.url);
   const clearName = `clear` + urlTransform(jsonData.api.url);
-  const stateName =  urlTransform(jsonData.api.url) + 'list';
+  const stateName =  urlTransform(jsonData.api.url) + 'List';
 
   const payload = {
     modelName, fetchName, clearName, stateName, params: api.params, response: api.response
   }
 
   // 拼接
-  await writeFile(PrefixPath + fileName, defaultListTempalte(payload))
+  await writeFile(PrefixPath, defaultListTempalte(payload))
 }
 
 const handleList =  async (api, text) => {
