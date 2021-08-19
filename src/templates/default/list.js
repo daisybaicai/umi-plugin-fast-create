@@ -1,4 +1,4 @@
-import {getColumns, prettify, getFormItems} from '../../utils/utils';
+import {getColumnsNew, prettify, getFormItems} from '../../utils/utils';
 
 const text = ({modelName, fetchName, clearName, stateName, params, response}) => `import React from 'react';
 import { Button, Col, Form, Input, Row, Table, Select, Card, message } from 'antd';
@@ -57,7 +57,7 @@ const List = () => {
 
 
   const columns = ${
-    prettify(getColumns(response.properties))
+    prettify(getColumnsNew(response))
   }
 
   const searchForm = (

@@ -82,10 +82,60 @@ export const getParams = record => {
   return transFormedParams;
 };
 
-export const getResponse = url => {
-  return [];
+export const getResponse = record => {
+  // 获取数据源
+  const { paths = {}, definitions = {} } = getSwaggerInfos();
+  // debugger
+  const { responses = [] } = getCurrentPathInfo(record, paths);
+  // debugger
+  const transFormedParams = transformResponse(responses["200"], definitions);
+  // alert(JSON.stringify(transFormedParams))
+  return transFormedParams;
 };
 
-export const transformResponse = data => {
-  return {};
+const flat = arr => {
+  return arr.reduce((pre, cur) => {
+    return pre.concat(Array.isArray(cur) ? flat(cur) : cur);
+  }, []);
+};
+
+export const getSchema = (schema, definitions) => {
+  if (schema) {
+    const schemaNameRef = schema['$ref'];
+    const schemaName = schemaNameRef.substring(
+      schemaNameRef.lastIndexOf('/') + 1,
+    );
+    const curSchema = definitions[schemaName];
+
+    const properties = Object.keys(curSchema?.properties).map(key => {
+      const curProperties = curSchema.properties[key];
+      if(curProperties?.items?.originalRef) {
+        const res = getSchema(curProperties?.items, definitions);
+        return res;
+      }
+      return {
+        name: key,
+        ...curProperties,
+      };
+    });
+    return flat(properties);
+  }
+  return [];
+}
+
+export const transformResponse = (obj, definitions) => {
+  const schema = obj.schema || {};
+  if (schema) {
+    const schemaNameRef = schema['$ref'];
+    const schemaName = schemaNameRef.substring(
+      schemaNameRef.lastIndexOf('/') + 1,
+    );
+    const curSchema = definitions[schemaName];
+
+    const dataProperties = curSchema?.properties["data"];
+
+    const res = getSchema(dataProperties, definitions);
+    return res;
+  }
+  return [];
 };

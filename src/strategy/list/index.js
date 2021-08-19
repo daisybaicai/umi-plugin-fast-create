@@ -93,6 +93,7 @@ const fileName  = str.substring(index + 1, str.length);
     modelName, fetchName, clearName, stateName, params: api.params, response: api.response
   }
 
+  console.log('pay', payload);
   // 拼接
   await writeFile(PrefixPath, defaultListTempalte(payload))
 }

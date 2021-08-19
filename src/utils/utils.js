@@ -56,6 +56,21 @@ export function getColumns(properties = {}) {
 }
 
 /**
+ * 转化columns
+ * @param {*} properties
+ */
+ export function getColumnsNew(properties = []) {
+  const columns = [];
+  Array.isArray(properties) && properties.map(key => {
+    columns.push({
+      title: key?.description,
+      dataIndex: key?.name,
+    });
+  });
+  return JSON.stringify(columns);
+}
+
+/**
  * 转换Form.Items
  * @param {*} params
  */

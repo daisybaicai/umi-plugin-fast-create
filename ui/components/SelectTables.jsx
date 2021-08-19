@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Table, Button, Form, Modal, Input, Space } from 'antd';
-import { getParams, getTransformArr } from '../utils/data';
+import { getParams, getResponse, getTransformArr } from '../utils/data';
 import { useEffect, useState } from 'react';
 import { getLocalStorage, setLocalStorage } from '../utils/utils';
 import styles from './index.less';
@@ -15,23 +15,9 @@ function SelectTable({ api }) {
       return;
     }
 
-    // debugger
-    // const params = getParams(record) || [];
-    // alert('p', JSON.stringify(params));
-    // console.log('pa', params);
-    // debugger
-    // form.resetFields();
     setVisible(true);
-    // const p = [
-    //   {
-    //     description: '选择的企业的统一社会信用代码',
-    //     name: 'creditCode',
-    //     type: 'string',
-    //   },
-    // ];
     const params = getParams(record);
-    // api.log('p', params);
-    // alert('p1', JSON.stringify(params));
+    const response = getResponse(record);
 
     // 'api', 'params'
     form.setFieldsValue({
@@ -40,7 +26,7 @@ function SelectTable({ api }) {
         methods: record.method,
         url: record.url,
         params,
-        response: [],
+        response,
       },
     });
   };
@@ -81,7 +67,11 @@ function SelectTable({ api }) {
     form.validateFields().then(async values => {
       // async () => {
         const  {api: apiInfos = {}, ...rest} = values;
-        apiInfos.response = {};
+        let res = [];
+        if(apiInfos?.response) {
+          res = apiInfos?.response;
+        }
+        apiInfos.response = res;
         const payload = {
           ...rest,
           api: apiInfos,
