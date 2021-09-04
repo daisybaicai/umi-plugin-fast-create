@@ -8,9 +8,12 @@ import styles from './index.less';
 function SelectTable({ api }) {
   const [form] = Form.useForm();
 
+  const [type, setType] = useState(null);
+
   // const {api} = useContext(MyContext);
 
-  const handleShow = record => {
+  const handleShow = (record, t) => {
+    setType(t);
     if (record.children) {
       return;
     }
@@ -18,6 +21,8 @@ function SelectTable({ api }) {
     setVisible(true);
     const params = getParams(record);
     const response = getResponse(record);
+
+    console.log('p', params, response);
 
     // 'api', 'params'
     form.setFieldsValue({
@@ -39,7 +44,14 @@ function SelectTable({ api }) {
     { title: 'url', dataIndex: 'url', key: 'url' },
     {
       title: 'Action',
-      render: (_, record) => <a onClick={() => handleShow(record)}>查看</a>,
+      render: (_, record) => (
+        <Space>
+          <a onClick={() => handleShow(record, 'list')}>列表</a>
+          <a onClick={() => handleShow(record, 'form')}>form</a>
+          <a onClick={() => handleShow(record, 'api')}>api 生成</a>
+        </Space>
+      ),
+      // <a onClick={() => handleShow(record)}>查看</a>,
     },
   ];
 
@@ -66,18 +78,18 @@ function SelectTable({ api }) {
   const handleOk = () => {
     form.validateFields().then(async values => {
       // async () => {
-        const  {api: apiInfos = {}, ...rest} = values;
-        let res = [];
-        if(apiInfos?.response) {
-          res = apiInfos?.response;
-        }
-        apiInfos.response = res;
-        const payload = {
-          ...rest,
-          api: apiInfos,
-        }
+      const { api: apiInfos = {}, ...rest } = values;
+      let res = [];
+      if (apiInfos?.response) {
+        res = apiInfos?.response;
+      }
+      apiInfos.response = res;
+      const payload = {
+        ...rest,
+        api: apiInfos,
+      };
       await api.callRemote({
-        type: 'org.plugin.template.list',
+        type: `org.plugin.template.${type}`,
         payload: {
           text: JSON.stringify(payload),
         },

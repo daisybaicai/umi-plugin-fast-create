@@ -30,6 +30,9 @@ export default function(api: IApi) {
     if (action.type === 'org.plugin.template.detail') {
       handleText(actionType, action.payload.text, api);
     }
+    if (action.type === 'org.plugin.template.api') {
+      handleText(actionType, action.payload.text, api);
+    }
     if (action.type === 'org.plugin.swagger.create') {
       // 检查当前目录下是否有api-docs.json文件
 

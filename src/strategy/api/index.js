@@ -4,9 +4,10 @@ import { getStat, dirExists, writeFile, readFile } from '../../utils/fs';
 import {getLastStr, prettify, urlTransform} from '../../utils/utils';
 import defaultApiTemplate  from '../../templates/default/api';
 import defaultApiModel  from '../../templates/default/model';
-import defaultFormTempalte  from '../../templates/default/form';
+import defaultListTempalte  from '../../templates/default/list';
+
 import createApi from '../../templates/create/api';
-import { handleBabelTravese } from '../../traverse/form';
+import { handleBabelTravese } from '../../traverse';
 
 
 /**
@@ -65,16 +66,12 @@ async function handleModel(absoultPath, jsonData) {
  * @param {*} jsonData 
  */
 async function handleComponents(absoultPath, jsonData) {
-  // const PrefixPath = absoultPath + '/pages' + jsonData.componentsPath;
-  // const fileName = 'index.js';
-
   const PrefixPath = absoultPath + '/pages' + jsonData.componentsPath;
   const str = PrefixPath;
   var index = str.lastIndexOf("\/");  
  
 const fileName  = str.substring(index + 1, str.length);
   // const fileName = PrefixPath.;
-
 
   // 1. 创建service
   const isExist = await getStat(PrefixPath + fileName);
@@ -84,19 +81,24 @@ const fileName  = str.substring(index + 1, str.length);
     // // 创建文件，加入默认模板
     // const file = await writeFile(PrefixPath + fileName, defaultApiTemplate)
   }
+
   const {modelName, api} = jsonData;
 
   const fetchName = `fetch` + urlTransform(jsonData.api.url);
+  const saveName = `save` + urlTransform(jsonData.api.url);
+  const clearName = `clear` + urlTransform(jsonData.api.url);
+  const stateName =  urlTransform(jsonData.api.url) + 'List';
 
   const payload = {
-    modelName, fetchName, params: api.params, response: api.response
+    modelName, fetchName, clearName, stateName, params: api.params, response: api.response
   }
 
+  console.log('pay', payload);
   // 拼接
-  await writeFile(PrefixPath, prettify(defaultFormTempalte(payload)))
+  await writeFile(PrefixPath, defaultListTempalte(payload))
 }
 
-const handleForm =  async (api, text) => {
+const handleList =  async (api, text) => {
   var jsonData = eval('(' + text + ')');
 
   // 类型处理
@@ -110,19 +112,18 @@ const handleForm =  async (api, text) => {
     const absoultPath = api.paths.absSrcPath;
 
   if (r.valid) {
+    // console.log('v--');
     // 1. 创建api
     handleApi(absoultPath, jsonData)
     // 2. 创建model
     handleModel(absoultPath, jsonData)
-    // 3. 创建components
-    handleComponents(absoultPath, jsonData)
 
   } else {
     console.log('不符合');
   }
 };
 
-export default handleForm;
+export default handleList;
 
 /**
  * 
