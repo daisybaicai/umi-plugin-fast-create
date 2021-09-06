@@ -42,16 +42,19 @@ async function handleApi(absoultPath, jsonData) {
  * @param {*} jsonData 
  */
 async function handleDepend(absoultPath, jsonData) {
-  const PrefixPath = absoultPath + '/components/InfoContent';
-  const fileName = 'index.js';
+  const PrefixPath = absoultPath + '/components/InfoContent/index.jsx';
+  const str = PrefixPath;
+  var index = str.lastIndexOf("\/");  
+ 
+  const fileName  = str.substring(index + 1, str.length);
 
   // 1. 创建service
   const isExist = await getStat(PrefixPath + fileName);
   if(!isExist) {
     // 新建路径
-    const stats = await dirExists(PrefixPath);
-    // 创建文件，加入默认模板
-    const file = await writeFile(PrefixPath + fileName, defaultInfoContentTemplate)
+    const stats = await dirExists(PrefixPath.slice(0, index));
+    // // 创建文件，加入默认模板
+    const file = await writeFile(PrefixPath, defaultInfoContentTemplate)
   }
 }
 
@@ -87,13 +90,16 @@ async function handleModel(absoultPath, jsonData) {
  */
 async function handleComponents(absoultPath, jsonData) {
   const PrefixPath = absoultPath + '/pages' + jsonData.componentsPath;
-  const fileName = 'index.js';
+  const str = PrefixPath;
+  var index = str.lastIndexOf("\/");  
+ 
+  const fileName  = str.substring(index + 1, str.length);
 
   // 1. 创建service
   const isExist = await getStat(PrefixPath + fileName);
   if(!isExist) {
     // 新建路径
-    const stats = await dirExists(PrefixPath);
+    const stats = await dirExists(PrefixPath.slice(0, index));
     // // 创建文件，加入默认模板
     // const file = await writeFile(PrefixPath + fileName, defaultApiTemplate)
   }
@@ -110,7 +116,7 @@ async function handleComponents(absoultPath, jsonData) {
   }
 
   // 拼接
-  await writeFile(PrefixPath + fileName, defaultDetailTempalte(payload))
+  await writeFile(PrefixPath, defaultDetailTempalte(payload))
 }
 
 const handleDetail =  async (api, text) => {

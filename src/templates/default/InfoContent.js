@@ -1,7 +1,9 @@
 import React from 'react';
 import { Card, Descriptions } from 'antd';
 
-const InfoContent = `(props) => {
+const InfoContent = `
+import React from 'react';
+export default (props) => {
   const { data: dataInfo = [] } = props;
 
   function renderCardInfo(data) {

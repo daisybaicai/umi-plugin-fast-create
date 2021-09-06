@@ -113,3 +113,36 @@ export function getFormItemsInForm(params) {
   });
   return res;
 }
+
+/**
+ * 处理详情info
+ * @param {*} response 
+ * @returns 
+ */
+export function getDetailInfos(response) {
+  console.log('params', response);
+  const res = [];
+  if(Array.isArray(response)) {
+    response.forEach((item) => {
+      res.push({
+        name: item.description,
+        value: `data?.${item.name}`,
+      });
+    });
+  }
+
+
+  const cardInfo = [
+    {
+      title: '详情信息',
+      isShow: true,
+      children: res,
+    }
+  ];
+
+  const text = `
+    const cardInfo = ${JSON.stringify(cardInfo)}
+  `;
+
+  return text;
+} 

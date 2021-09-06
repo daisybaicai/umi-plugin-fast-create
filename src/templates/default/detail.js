@@ -1,4 +1,4 @@
-import {getColumns, prettify, getFormItems} from '../../utils/utils';
+import { getColumns, prettify, getDetailInfos } from '../../utils/utils';
 
 const text = ({modelName, fetchName, clearName, stateName, params, response}) => `import React from 'react';
 import { Button, Col, Form, Input, Row, Select, Card, message } from 'antd';
@@ -36,34 +36,9 @@ const Detail = () => {
     });
   });
 
-  const cardInfo = [
-    {
-      title: '详情信息',
-      isShow: true,
-      children: [
-        {
-          key: '用户ID',
-          value: detail.userId,
-        },
-        {
-          key: '联系方式',
-          value: detail.mobile,
-        },
-        {
-          key: '账户创建时间',
-          value: formatTimeToDateSecond(detail.gmtCreated),
-        },
-      ],
-    }
-  ];
-
-  const res = [];
-  Object.keys(properties).map((key) => {
-    res.push({
-      name: properties[key].description,
-      value: data?.${key},
-    });
-  });
+  ${
+    getDetailInfos(response)
+  }
 
   return (
     <PageHeaderWrapper breadcrumb={null} title="详情">
