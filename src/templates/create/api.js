@@ -26,7 +26,7 @@ export default function(payload) {
     // ${description}
     export async function fetch${functionName}(${hasparams ? 'params': ''}) {
       return request(${requestUrl}, {
-        methods: '${upperMethods}',
+        method: '${upperMethods}',
         ${
             (upperMethods !== 'GET' && hasparams) ? `data: params,`: ''
         }
