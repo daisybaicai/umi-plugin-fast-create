@@ -10,7 +10,7 @@ export default function(payload) {
 
   const functionName = urlTransform(url);
 
-  const hasparams = params.length > 0;
+  const hasparams = Array.isArray(params) && params.length > 0;
 
   const getParams = hasparams && upperMethods === 'GET';
 
