@@ -22,8 +22,6 @@ function SelectTable({ api }) {
     const params = getParams(record);
     const response = getResponse(record);
 
-    console.log('p', params, response);
-
     // 'api', 'params'
     form.setFieldsValue({
       api: {
@@ -89,12 +87,15 @@ function SelectTable({ api }) {
         ...rest,
         api: apiInfos,
       };
-      await api.callRemote({
+      const { data } = await api.callRemote({
         type: `org.plugin.template.${type}`,
         payload: {
           text: JSON.stringify(payload),
         },
       });
+      if(data) {
+        setVisible(false)
+      }
       // }
     });
   };
