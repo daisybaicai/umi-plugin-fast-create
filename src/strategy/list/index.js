@@ -7,7 +7,7 @@ import defaultApiModel  from '../../templates/default/model';
 import defaultListTempalte  from '../../templates/default/list';
 
 import createApi from '../../templates/create/api';
-import { handleBabelTravese } from '../../traverse';
+import { handleBabelTraverse } from '../../traverse';
 
 
 /**
@@ -53,7 +53,7 @@ async function handleModel(absoultPath, jsonData) {
     // 创建文件，加入默认模板
     const file = await writeFile(PrefixPath + fileName, defaultApiModel(jsonData.modelName))
   }
-  const newCode = await handleBabelTravese(PrefixPath + fileName, jsonData);
+  const newCode = await handleBabelTraverse(PrefixPath + fileName, jsonData);
 
   // 拼接
   await writeFile(PrefixPath + fileName, prettify(newCode))

@@ -7,7 +7,7 @@ import template from "@babel/template";
 import { getStat, dirExists, writeFile, readFile } from '../utils/fs';
 import {urlTransform} from '../utils/utils';
 
-export async function  handleBabelTravese(url, jsonData) {
+export async function  handleBabelTraverse(url, jsonData) {
   // 读取文件
   const text = await readFile(url);
 
