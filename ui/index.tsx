@@ -3,6 +3,7 @@ import { Button } from 'antd';
 import React from 'react';
 import SelectTable from './components/SelectTables';
 import { setLocalStorage } from './utils/utils';
+import './global.less'
 
 
 export default (api: IUiApi) => {
