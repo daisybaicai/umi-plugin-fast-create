@@ -125,7 +125,7 @@ export const transformResponse = (obj, definitions) => {
   const schema = obj?.schema || {};
   if (schema) {
     const schemaNameRef = schema['$ref'];
-    const schemaName = schemaNameRef.substring(
+    const schemaName = schemaNameRef?.substring(
       schemaNameRef.lastIndexOf('/') + 1,
     );
     const curSchema = definitions[schemaName];

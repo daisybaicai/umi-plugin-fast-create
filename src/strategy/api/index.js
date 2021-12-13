@@ -109,10 +109,9 @@ const handleList =  async (api, text) => {
   var v = new Validator();
   const r = v.validate(jsonData, schema);
 
-    const absoultPath = api.paths.absSrcPath;
+  const absoultPath = api.paths.absSrcPath;
 
   if (r.valid) {
-    // console.log('v--');
     // 1. 创建api
     handleApi(absoultPath, jsonData)
     // 2. 创建model
@@ -135,7 +134,7 @@ export default handleList;
      methods: "GET",
      params: [],
      description: "登录",
-     response: {}
+     response: []
    },
   componentsName: "login",
   componentsPath: "/Login/List/index.js",

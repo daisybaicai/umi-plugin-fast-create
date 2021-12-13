@@ -30,8 +30,8 @@ function SelectTable({ api }) {
         description: record.description || '',
         methods: record.method,
         url: record.url,
-        params,
-        response,
+        params: params || [],
+        response: response || [],
       },
     });
   };
