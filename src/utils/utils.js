@@ -6,6 +6,11 @@ export function urlTransform(url, prefix = '/api/v1') {
   return toHump(nameStr);
 }
 
+export function createStateName(url, suffix = 'List') {
+  return url.replace(/suffix/i, "") + suffix
+}
+
+
 /**
  * 驼峰转化
  * @param {*} name

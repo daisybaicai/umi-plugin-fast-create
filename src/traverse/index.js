@@ -5,7 +5,7 @@ import * as parser from '@babel/parser';
 import generate from '@babel/generator';
 import template from "@babel/template";
 import { getStat, dirExists, writeFile, readFile } from '../utils/fs';
-import {urlTransform} from '../utils/utils';
+import {createStateName, urlTransform} from '../utils/utils';
 
 export async function  handleBabelTraverse(url, jsonData) {
   // 读取文件
@@ -21,7 +21,7 @@ export async function  handleBabelTraverse(url, jsonData) {
   const fetchName = `fetch` + urlTransform(jsonData.api.url);
   const saveName = `save` + urlTransform(jsonData.api.url);
   const clearName = `clear` + urlTransform(jsonData.api.url);
-  const stateName =  urlTransform(jsonData.api.url) + 'List';
+  const stateName =  createStateName(urlTransform(jsonData.api.url), 'List');
 
 
   // 替换模板内容然后获取指定内容块
