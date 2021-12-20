@@ -7,7 +7,7 @@ export function urlTransform(url, prefix = '/api/v1') {
 }
 
 export function createStateName(url, suffix = 'List') {
-  return url.replace(/suffix/i, "") + suffix
+  return url.replace(new RegExp(suffix,'i'), "") + suffix
 }
 
 
