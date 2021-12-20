@@ -2,7 +2,7 @@ import prettier from 'prettier';
 
 export function urlTransform(url, prefix = '/api/v1') {
   const nameArr = url.split(prefix);
-  const nameStr = nameArr.length > 1 : nameArr[1]: nameArr[0]
+  const nameStr = nameArr.length > 1 ? nameArr[1]: nameArr[0]
   return toHump(nameStr);
 }
 
