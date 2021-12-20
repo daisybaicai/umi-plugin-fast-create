@@ -1,7 +1,7 @@
 var Validator = require('jsonschema').Validator;
 import schema from './schema';
 import { getStat, dirExists, writeFile, readFile } from '../../utils/fs';
-import {getLastStr, prettify, urlTransform} from '../../utils/utils';
+import {createStateName, getLastStr, prettify, urlTransform} from '../../utils/utils';
 import defaultApiTemplate  from '../../templates/default/api';
 import defaultInfoContentTemplate  from '../../templates/default/InfoContent';
 import defaultApiModel  from '../../templates/default/model';
@@ -109,7 +109,7 @@ async function handleComponents(absoultPath, jsonData) {
   const fetchName = `fetch` + urlTransform(jsonData.api.url);
   const saveName = `save` + urlTransform(jsonData.api.url);
   const clearName = `clear` + urlTransform(jsonData.api.url);
-  const stateName =  urlTransform(jsonData.api.url) + 'detail';
+  const stateName =  createStateName(urlTransform(jsonData.api.url), 'Detail');
 
   const payload = {
     modelName, fetchName, clearName, stateName, params: api.params, response: api.response
