@@ -14,13 +14,13 @@ export default function(payload) {
 
   const getParams = hasparams && upperMethods === 'GET';
 
-  let requestUrl = "`";
+  let requestUrl = "`${HOST}";
   requestUrl+=url;
   if(getParams) {
     requestUrl += '?${stringify(params)}';
   }
   requestUrl+="`";
-  
+
   const code = `
     \n
     // ${description}

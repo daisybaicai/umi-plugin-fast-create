@@ -1,6 +1,6 @@
 import prettier from 'prettier';
 
-export function urlTransform(url, prefix = '/api/v1') {
+export function urlTransform(url, prefix = '/bms-api') {
   const nameArr = url.split(prefix);
   const nameStr = nameArr.length > 1 ? nameArr[1]: nameArr[0]
   return toHump(nameStr);
