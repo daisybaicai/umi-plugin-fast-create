@@ -42,11 +42,15 @@ export const getSwaggerInfos = () => {
 
 export const getCurrentPathInfo = (record = {}, paths = []) => {
   const { method = '', url = '' } = record;
-  const currentPath = paths[url][method]
+  const currentPath = paths[url][method];
   return currentPath || {};
 };
 
 export const transformParams = (parameters = [], definitions) => {
+  const hasSchema = parameters.some(item => item?.schema);
+  if (!hasSchema) {
+    return parameters;
+  }
   const result =
     Array.isArray(parameters) &&
     parameters.map(item => {
@@ -83,10 +87,9 @@ export const getParams = record => {
 export const getResponse = record => {
   // 获取数据源
   const { paths = {}, definitions = {} } = getSwaggerInfos();
-  // debugger
   const { responses = [] } = getCurrentPathInfo(record, paths);
   // debugger
-  const transFormedParams = transformResponse(responses["200"], definitions);
+  const transFormedParams = transformResponse(responses['200'], definitions);
   // alert(JSON.stringify(transFormedParams))
   return transFormedParams;
 };
@@ -105,21 +108,22 @@ export const getSchema = (schema, definitions) => {
     );
     const curSchema = schemaName ? definitions[schemaName] : {};
 
-    const properties = Object.keys(curSchema?.properties || {}).map(key => {
-      const curProperties = curSchema.properties[key];
-      if(curProperties?.items?.originalRef) {
-        const res = getSchema(curProperties?.items, definitions);
-        return res;
-      }
-      return {
-        name: key,
-        ...curProperties,
-      };
-    }) || [];
+    const properties =
+      Object.keys(curSchema?.properties || {}).map(key => {
+        const curProperties = curSchema.properties[key];
+        if (curProperties?.items?.originalRef) {
+          const res = getSchema(curProperties?.items, definitions);
+          return res;
+        }
+        return {
+          name: key,
+          ...curProperties,
+        };
+      }) || [];
     return flat(properties);
   }
   return [];
-}
+};
 
 export const transformResponse = (obj, definitions) => {
   const schema = obj?.schema || {};
@@ -130,7 +134,16 @@ export const transformResponse = (obj, definitions) => {
     );
     const curSchema = definitions[schemaName];
 
-    const dataProperties = curSchema?.properties["data"];
+    let result = {};
+    Object.keys(curSchema?.properties || {}).map(key => {
+      const obj = curSchema?.properties[key];
+      const schemaNameRef = obj['$ref'] || '';
+      if (schemaNameRef) {
+        result = obj;
+      }
+    });
+
+    const dataProperties = result;
 
     const res = getSchema(dataProperties, definitions);
     return res;
