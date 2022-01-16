@@ -45,6 +45,12 @@ export default function(api: IApi) {
         data: "成功"
       })
     }
+    if (action.type === 'org.plugin.template.action') {      
+      handleText(actionType, action.payload.text, api);
+      success({
+        data: "成功"
+      })
+    }
     if (action.type === 'org.plugin.swagger.create') {
       // 检查当前目录下是否有api-docs.json文件
 

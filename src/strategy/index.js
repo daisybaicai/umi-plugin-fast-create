@@ -1,6 +1,7 @@
 import handleList from './list/index';
 import handleForm from './form/index';
 import handleDetail from './detail/index';
+import handleAction from './action/index';
 import handleApi from './api/index';
 
 const strategy = {
@@ -17,6 +18,9 @@ const strategy = {
     },
     "api": function(api, text) {
         return handleApi(api, text);
+    },
+    "action": function(api, text) {
+        return handleAction(api, text);
     }
 };
 
