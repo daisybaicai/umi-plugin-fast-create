@@ -9,17 +9,17 @@ const strategy = {
         // form 
         return handleForm(api,text, options);
     },
-    "detail" : function(api,text) {
+    "detail" : function(api,text, options) {
         return handleDetail(api,text, options);
     },
-    "list" : function(api,text) {
+    "list" : function(api,text, options) {
         // console.log('text1', text);
         return handleList(api,text, options);
     },
-    "api": function(api, text) {
+    "api": function(api, text, options) {
         return handleApi(api, text, options);
     },
-    "action": function(api, text) {
+    "action": function(api, text, options) {
         return handleAction(api, text, options);
     }
 };
