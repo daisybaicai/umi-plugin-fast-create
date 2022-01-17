@@ -5,22 +5,22 @@ import handleAction from './action/index';
 import handleApi from './api/index';
 
 const strategy = {
-    "form": function(api,text) {
+    "form": function(api,text, options) {
         // form 
-        return handleForm(api,text);
+        return handleForm(api,text, options);
     },
     "detail" : function(api,text) {
-        return handleDetail(api,text);
+        return handleDetail(api,text, options);
     },
     "list" : function(api,text) {
         // console.log('text1', text);
-        return handleList(api,text);
+        return handleList(api,text, options);
     },
     "api": function(api, text) {
-        return handleApi(api, text);
+        return handleApi(api, text, options);
     },
     "action": function(api, text) {
-        return handleAction(api, text);
+        return handleAction(api, text, options);
     }
 };
 

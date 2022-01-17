@@ -5,14 +5,25 @@ import { IApi } from '@umijs/types';
 import strategy from './strategy/index';
 import { readFile } from './utils/fs';
 import { StandardSwagger } from './utils/data';
+import fs from 'fs';
 
-var handleText = function(type: any, text: any, api: any) {
-  return strategy[type](api, text);
+var handleText = function(type: any, text: any, api: any, options: any) {
+  return strategy[type](api, text, options);
 };
 
 export default function(api: IApi) {
-  api.logger.info('use plugin');
+  let options = {
+    prefix: '/api'
+  };
+  const cwdPath = api.paths.cwd;
+  // 获取主题 json 配置文件
+  const themeConfigPath = cwdPath + '/fast.config.json';  
 
+  if (fs.existsSync(themeConfigPath)) {
+    options = require(themeConfigPath);
+  }  
+
+  api.logger.info('use plugin');
 
   // @ts-ignore
   api.addUIPlugin(() => join(__dirname, '../dist/index.umd.js'));
@@ -22,31 +33,31 @@ export default function(api: IApi) {
     const actionType = action.type.replace(/org.plugin.template./, '');
 
     if (action.type === 'org.plugin.template.list') {
-      handleText(actionType, action.payload.text, api);
+      handleText(actionType, action.payload.text, api, options);
       success({
         data: "成功"
       })
     }
     if (action.type === 'org.plugin.template.form') {
-      handleText(actionType, action.payload.text, api);
+      handleText(actionType, action.payload.text, api, options);
       success({
         data: "成功"
       })
     }
     if (action.type === 'org.plugin.template.detail') {
-      handleText(actionType, action.payload.text, api);
+      handleText(actionType, action.payload.text, api, options);
       success({
         data: "成功"
       })
     }
     if (action.type === 'org.plugin.template.api') {
-      handleText(actionType, action.payload.text, api);
+      handleText(actionType, action.payload.text, api, options);
       success({
         data: "成功"
       })
     }
     if (action.type === 'org.plugin.template.action') {      
-      handleText(actionType, action.payload.text, api);
+      handleText(actionType, action.payload.text, api, options);
       success({
         data: "成功"
       })

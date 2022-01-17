@@ -96,7 +96,7 @@ const fileName  = str.substring(index + 1, str.length);
   await writeFile(PrefixPath, prettify(defaultFormTempalte(payload)))
 }
 
-const handleForm =  async (api, text) => {
+const handleForm =  async (api, text, options) => {
   var jsonData = eval('(' + text + ')');
 
   // 类型处理
