@@ -5,23 +5,14 @@ import { IApi } from '@umijs/types';
 import strategy from './strategy/index';
 import { readFile } from './utils/fs';
 import { StandardSwagger } from './utils/data';
-import fs from 'fs';
+import { getOptions } from './utils/options';
 
 var handleText = function(type: any, text: any, api: any, options: any) {
   return strategy[type](api, text, options);
 };
 
 export default function(api: IApi) {
-  let options = {
-    prefix: '/api'
-  };
-  const cwdPath = api.paths.cwd;
-  // 获取主题 json 配置文件
-  const themeConfigPath = cwdPath + '/fast.config.json';  
-
-  if (fs.existsSync(themeConfigPath)) {
-    options = require(themeConfigPath);
-  }  
+  const options = getOptions(api.paths.cwd);
 
   api.logger.info('use plugin');
 
@@ -31,6 +22,12 @@ export default function(api: IApi) {
   // @ts-ignore
   api.onUISocket(({ action, failure, success }) => {
     const actionType = action.type.replace(/org.plugin.template./, '');
+
+    if(action.type === 'org.plugin.template.options') {
+      success({
+        data: options
+      })
+    }
 
     if (action.type === 'org.plugin.template.list') {
       handleText(actionType, action.payload.text, api, options);

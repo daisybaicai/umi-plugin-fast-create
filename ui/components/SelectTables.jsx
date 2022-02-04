@@ -10,7 +10,8 @@ function SelectTable({ api }) {
 
   const [type, setType] = useState(null);
 
-  // const {api} = useContext(MyContext);
+
+  const [options, setOptions] = useState({});
 
   const handleShow = (record, t) => {
     setType(t);
@@ -22,14 +23,18 @@ function SelectTable({ api }) {
     const params = getParams(record);
     const response = getResponse(record);
 
+    const {
+      ignored: { params: pIg = [], response: rIg = [] },
+    } = options;
+
     // 'api', 'params'
     form.setFieldsValue({
       api: {
         description: record.description || '',
         methods: record.method,
         url: record.url,
-        params: params || [],
-        response: response || [],
+        params: params?.filter(item => !pIg.includes(item?.name)) || [],
+        response: response?.filter(item => !rIg.includes(item?.name)) || [],
       },
     });
   };
@@ -94,8 +99,8 @@ function SelectTable({ api }) {
           text: JSON.stringify(payload),
         },
       });
-      if(data) {
-        setVisible(false)
+      if (data) {
+        setVisible(false);
       }
       // }
     });
@@ -104,6 +109,32 @@ function SelectTable({ api }) {
   return (
     <>
       <Button
+        onClick={async () => {
+          if (!options?.url) {
+            alert('暂无匹配url');
+            return;
+          }
+          fetch(options?.url, {
+            headers: {
+              'access-control-allow-origin': '*',
+            },
+          })
+            .then(response => {
+              return response.json(); // 先将结果转换为 JSON 对象
+            })
+            .then(data => {
+              api.logger.info('data');
+              api.logger.info(JSON.stringify(data));
+              setLocalStorage('swagger-data', JSON.stringify(data));
+            })
+            .catch(function(error) {
+              api.logger.error(error);
+            });
+        }}
+      >
+        生成swagger数据流
+      </Button>
+      <Button
         onClick={() => {
           const res = getLocalStorage('swagger-data');
           alert(res);
@@ -111,6 +142,17 @@ function SelectTable({ api }) {
         }}
       >
         填充table
+      </Button>
+      <Button
+        onClick={async () => {
+          const { data } = await api.callRemote({
+            type: `org.plugin.template.options`,
+          });
+          alert(JSON.stringify(data));
+          setOptions(data);
+        }}
+      >
+        获取options
       </Button>
       <div className={styles.container}>
         <Table
