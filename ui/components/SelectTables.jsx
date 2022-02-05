@@ -52,7 +52,7 @@ function SelectTable({ api }) {
           <a onClick={() => handleShow(record, 'list')}>列表</a>
           <a onClick={() => handleShow(record, 'form')}>form</a>
           <a onClick={() => handleShow(record, 'detail')}>detail</a>
-          <a onClick={() => handleShow(record, 'api')}>api 生成</a>
+          {/* <a onClick={() => handleShow(record, 'api')}>api 生成</a> */}
           <a onClick={() => handleShow(record, 'action')}>columns操作</a>
         </Space>
       ),

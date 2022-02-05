@@ -2,7 +2,7 @@ import handleList from './list/index';
 import handleForm from './form/index';
 import handleDetail from './detail/index';
 import handleAction from './action/index';
-import handleApi from './api/index';
+// import handleApi from './api/index';
 
 const strategy = {
     "form": function(api,text, options) {
@@ -16,9 +16,9 @@ const strategy = {
         // console.log('text1', text);
         return handleList(api,text, options);
     },
-    "api": function(api, text, options) {
-        return handleApi(api, text, options);
-    },
+    // "api": function(api, text, options) {
+    //     return handleApi(api, text, options);
+    // },
     "action": function(api, text, options) {
         return handleAction(api, text, options);
     }

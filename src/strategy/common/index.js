@@ -1,22 +1,27 @@
-var Validator = require('jsonschema').Validator;
-import schema from './schema';
-import { getStat, dirExists, writeFile, readFile } from '../../utils/fs';
-import {createStateName, getLastStr, prettify, urlTransform} from '../../utils/utils';
-import defaultApiTemplate  from '../../templates/default/api';
-import defaultApiModel  from '../../templates/default/model';
-import defaultListTempalte  from '../../templates/default/list';
-
+import { TYPES } from '../../common/enum';
 import createApi from '../../templates/create/api';
-import { handleBabelTraverse } from '../../traverse';
+import defaultApiTemplate from '../../templates/default/api';
+import defaultListTemplate from '../../templates/default/list';
+import defaultApiModel from '../../templates/default/model';
+import traverseTemplates from '../../traverse/index';
+import { dirExists, getStat, readFile, writeFile } from '../../utils/fs';
+import { createStateName, prettify, urlTransform } from '../../utils/utils';
 
+const strategyEnum = {
+  [TYPES.LIST]: traverseTemplates.traverseList,
+}
+
+const templatesEnum = {
+  [TYPES.LIST]: defaultListTemplate
+}
 
 /**
  * handleApi
- * @param {*} absoultPath 
+ * @param {*} absPath 
  * @param {*} jsonData 
  */
-async function handleApi(absoultPath, jsonData) {
-  const PrefixPath = absoultPath + '/services/';
+export async function handleApi(absPath, jsonData) {
+  const PrefixPath = absPath + '/services/';
   const fileName = 'api.js';
 
   // 1. 创建service
@@ -37,11 +42,12 @@ async function handleApi(absoultPath, jsonData) {
 
 /**
  * handleModel
- * @param {*} absoultPath 
+ * @param {*} absPath 
  * @param {*} jsonData 
+ * @param {*} type
  */
-async function handleModel(absoultPath, jsonData) {
-  const PrefixPath = absoultPath + '/models/';
+export async function handleModel(absPath, jsonData, type) {
+  const PrefixPath = absPath + '/models/';
   const modelName = jsonData.modelName;
   const fileName = `${modelName}.js`;
 
@@ -53,20 +59,22 @@ async function handleModel(absoultPath, jsonData) {
     // 创建文件，加入默认模板
     const file = await writeFile(PrefixPath + fileName, defaultApiModel(jsonData.modelName))
   }
-  const newCode = await handleBabelTraverse(PrefixPath + fileName, jsonData);
+
+  const handleBabelTraverseFunc = strategyEnum[type];
+  const newCode = await handleBabelTraverseFunc(PrefixPath + fileName, jsonData);
 
   // 拼接
   await writeFile(PrefixPath + fileName, prettify(newCode))
 }
 
-
 /**
  * handleComponents
- * @param {*} absoultPath 
+ * @param {*} absPath 
  * @param {*} jsonData 
+ * @param {*} type
  */
-async function handleComponents(absoultPath, jsonData) {
-  const PrefixPath = absoultPath + '/pages' + jsonData.componentsPath;
+export async function handleComponents(absPath, jsonData, type) {
+  const PrefixPath = absPath + '/pages' + jsonData.componentsPath;
   const str = PrefixPath;
   var index = str.lastIndexOf("\/");  
  
@@ -87,56 +95,14 @@ const fileName  = str.substring(index + 1, str.length);
   const fetchName = `fetch` + urlTransform(jsonData.api.url);
   const saveName = `save` + urlTransform(jsonData.api.url);
   const clearName = `clear` + urlTransform(jsonData.api.url);
-  const stateName =  createStateName(urlTransform(jsonData.api.url), 'List');
+  const stateName =  createStateName(urlTransform(jsonData.api.url), type);
 
   const payload = {
     modelName, fetchName, clearName, stateName, params: api.params, response: api.response
   }
 
-  console.log('pay', payload);
+  const defaultTemplate = templatesEnum[type];
+
   // 拼接
-  await writeFile(PrefixPath, defaultListTempalte(payload))
+  await writeFile(PrefixPath, defaultTemplate(payload))
 }
-
-const handleList =  async (api, text) => {
-  var jsonData = eval('(' + text + ')');
-
-  // 类型处理
-  if (typeof jsonData !== 'object') {
-    return;
-  }
-  // 校验数据的合理性
-  var v = new Validator();
-  const r = v.validate(jsonData, schema);
-
-  const absoultPath = api.paths.absSrcPath;
-
-  if (r.valid) {
-    // 1. 创建api
-    handleApi(absoultPath, jsonData)
-    // 2. 创建model
-    handleModel(absoultPath, jsonData)
-
-  } else {
-    console.log('不符合');
-  }
-};
-
-export default handleList;
-
-/**
- * 
- * // https://www.jsonschema.net/home 生成Schema
-{
-  modelName: "login",
-   api: {
-     url: "/api/v1/login",
-     methods: "GET",
-     params: [],
-     description: "登录",
-     response: []
-   },
-  componentsName: "login",
-  componentsPath: "/Login/List/index.js",
-}
- */
