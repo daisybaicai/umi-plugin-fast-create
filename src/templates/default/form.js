@@ -4,6 +4,7 @@ const text = ({modelName, fetchName, params, response}) => `import React from 'r
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Button, Form, Input, message } from 'antd';
 import { useDva } from '@/utils/hooks';
+import { getNormalRules } from '@/common/project';
 
 const formItemLayout = {
   labelCol: { span: 8 },

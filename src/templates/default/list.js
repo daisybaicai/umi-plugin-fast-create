@@ -1,6 +1,6 @@
 import {getColumnsNew, prettify, getFormItems} from '../../utils/utils';
 
-const text = ({modelName, fetchName, clearName, stateName, params, response}) => `import React from 'react';
+const text = ({modelName, fetchName, clearName, stateName, params, response}) => `import React, { useRef, useState } from 'react';
 import { Button, Col, Form, Input, Row, Table, Select, Card, message } from 'antd';
 import { useDva, useSearchFormTable } from '@/utils/hooks';
 import { useMount, useUnmount } from 'ahooks';

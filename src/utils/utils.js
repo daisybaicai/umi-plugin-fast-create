@@ -105,15 +105,10 @@ export function getFormItemsInForm(params) {
     <Form.Item
     name="${item.name}"
     label="${item.description}"
-    rules={[
-      {
-        required: true,
-        message: '请输入${item.description}',
-      },
-    ]}
+    rules={getNormalRules('${item.description}', { maxLen: 20 })}
     validateFirst
   >
-    <Input placeholder="请输入${item.description}" autoComplete="off" />
+    <Input placeholder="请输入" autoComplete="off" />
   </Form.Item>
 `;
   });
