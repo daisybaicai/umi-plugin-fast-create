@@ -2,6 +2,7 @@ import { TYPES } from '../../common/enum';
 import createApi from '../../templates/create/api';
 import defaultApiTemplate from '../../templates/default/api';
 import defaultListTemplate from '../../templates/default/list';
+import defaultDetailTemplate from '../../templates/default/detail';
 import defaultApiModel from '../../templates/default/model';
 import traverseTemplates from '../../traverse/index';
 import { dirExists, getStat, readFile, writeFile } from '../../utils/fs';
@@ -9,10 +10,12 @@ import { createStateName, prettify, urlTransform } from '../../utils/utils';
 
 const strategyEnum = {
   [TYPES.LIST]: traverseTemplates.traverseList,
+  [TYPES.DETAIL]: traverseTemplates.traverseDetail,
 }
 
 const templatesEnum = {
-  [TYPES.LIST]: defaultListTemplate
+  [TYPES.LIST]: defaultListTemplate,
+  [TYPES.DETAIL]: defaultDetailTemplate,
 }
 
 /**

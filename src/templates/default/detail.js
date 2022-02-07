@@ -1,5 +1,10 @@
 import { getColumns, prettify, getDetailInfos } from '../../utils/utils';
 
+const payloadInfo = (array1) => array1.reduce((prev, cur) => {
+	prev[cur.name] = `params.${cur.name}`;
+  	return prev;
+}, {})
+
 const text = ({modelName, fetchName, clearName, stateName, params, response}) => `import React from 'react';
 import { Button, Col, Form, Input, Row, Select, Card, message } from 'antd';
 import { useDva } from '@/utils/hooks';
@@ -9,7 +14,7 @@ import InfoContent from '@/components/InfoContent';
 
 
 const { Option } = Select;
-const Detail = () => {
+const Detail = (props) => {
   const {
     dispatch,
     data: {
@@ -17,13 +22,14 @@ const Detail = () => {
     },
   } = useDva({ loading: '${modelName}/${fetchName}' }, ['${modelName}']);
 
+  const {
+    match: { params },
+  } = props;
 
   useMount(() => {
     dispatch({
       type: '${modelName}/${fetchName}',
-      // TODO: 需要自行补充
-      payload: {
-      },
+      payload: ${JSON.stringify(payloadInfo(params))}
     }).catch((err) => {
       message.error(err);
     });

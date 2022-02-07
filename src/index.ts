@@ -66,13 +66,10 @@ export default function(api: IApi) {
       
       readFile(`${cwdPath}/api-docs.json`).then(res => {
         const JSONData = JSON.parse(res);        
-        const swagger = new StandardSwagger(JSONData);
-        // console.log('success');
-        
+        const swagger = new StandardSwagger(JSONData);        
         success({
           data: res
         })
-        // console.log('tags', JSONData.tags);
         
         // 共享变量
       }).catch(err => {
