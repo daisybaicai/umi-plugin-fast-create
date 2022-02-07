@@ -70,9 +70,9 @@ export const transformParams = (parameters = [], definitions) => {
         });
         return properties;
       }
-      return item.schema;
+      return item;
     });
-  return result[0];
+  return Array.isArray(result) ? result.flat() : [];
 };
 
 export const getParams = record => {
