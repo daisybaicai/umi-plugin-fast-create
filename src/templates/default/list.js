@@ -88,9 +88,11 @@ const List = () => {
     </div>
   );
   return (
-    <PageHeaderWrapper breadcrumb={null} title="列表">
-      <Card bordered={false}>
+    <>
+      <Card bordered={false} style={{ marginBottom: 20 }}>
         {searchForm}
+      </Card>
+      <Card bordered={false}>
         <Table
           scroll={{
             x: 'calc(100% - 100px)',
@@ -99,7 +101,7 @@ const List = () => {
           {...tableProps}
         />
       </Card>
-    </PageHeaderWrapper>
+    </>
   );
 };
 
