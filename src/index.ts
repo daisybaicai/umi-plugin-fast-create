@@ -29,6 +29,13 @@ export default function(api: IApi) {
       })
     }
 
+    if (action.type === 'org.plugin.template.dialog') {
+      handleText(actionType, action.payload.text, api, options);
+      success({
+        data: "成功"
+      })
+    }
+
     if (action.type === 'org.plugin.template.list') {
       handleText(actionType, action.payload.text, api, options);
       success({

@@ -1,9 +1,30 @@
 import React, { useContext } from 'react';
-import { Table, Button, Form, Modal, Input, Space } from 'antd';
+import { Table, Button, Form, Modal, Input, Space, Select } from 'antd';
 import { getParams, getResponse, getTransformArr } from '../utils/data';
 import { useEffect, useState } from 'react';
 import { getLocalStorage, setLocalStorage } from '../utils/utils';
 import styles from './index.less';
+import { DIALOG_FORM_REF_TYPE, DIALOG_TYPE, POSITION_TYPE } from '../common/enum';
+
+const DictCustomSelect = React.forwardRef(
+  ({ data = {}, value = undefined, onChange = () => {} }, ref) => {
+    return (
+      <Select
+        placeholder="请选择"
+        style={{ width: '100%' }}
+        ref={ref}
+        value={value}
+        onChange={onChange}
+      >
+        {Object.keys(data).map(k => (
+          <Select.Option key={data[k]?.desc} value={data[k]?.code}>
+            {data[k]?.desc}
+          </Select.Option>
+        ))}
+      </Select>
+    );
+  },
+);
 
 function SelectTable({ api }) {
   const [form] = Form.useForm();
@@ -53,6 +74,7 @@ function SelectTable({ api }) {
           <a onClick={() => handleShow(record, 'detail')}>detail</a>
           {/* <a onClick={() => handleShow(record, 'api')}>api 生成</a> */}
           <a onClick={() => handleShow(record, 'action')}>columns操作</a>
+          <a onClick={() => handleShow(record, 'dialog')}>弹框提问</a>
         </Space>
       ),
       // <a onClick={() => handleShow(record)}>查看</a>,
@@ -178,6 +200,22 @@ function SelectTable({ api }) {
           <Form.Item label="componentsPath" name="componentsPath">
             <Input />
           </Form.Item>
+          {type === 'dialog' && (
+            <>
+              <Form.Item label="handleName" name="handleName">
+                <Input />
+              </Form.Item>
+              <Form.Item label="弹框类型" name="dialogType">
+                <DictCustomSelect data={DIALOG_TYPE} />
+              </Form.Item>
+              <Form.Item label="弹框位置" name="position">
+                <DictCustomSelect data={POSITION_TYPE} />
+              </Form.Item>
+              <Form.Item label="弹框formRef" name="dialogFormRef">
+                <DictCustomSelect data={DIALOG_FORM_REF_TYPE} />
+              </Form.Item>
+            </>
+          )}
           <Form.Item label="api相关" name="api">
             <Form.Item label="url" name={['api', 'url']}>
               <Input />

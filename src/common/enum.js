@@ -3,4 +3,5 @@ export const TYPES = {
     DETAIL: 'Detail',
     FORM: 'Form',
     ACTION: 'Action',
+    DIALOG: 'Dialog',
 }

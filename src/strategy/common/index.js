@@ -15,6 +15,7 @@ const strategyEnum = {
   [TYPES.DETAIL]: traverseTemplates.traverseDetail,
   [TYPES.FORM]: traverseTemplates.traverseForm,
   [TYPES.ACTION]: traverseTemplates.traverseForm,
+  [TYPES.DIALOG]: traverseTemplates.traverseForm,
 }
 
 const templatesEnum = {
@@ -22,6 +23,7 @@ const templatesEnum = {
   [TYPES.DETAIL]: defaultDetailTemplate,
   [TYPES.FORM]: defaultFormTemplate,
   [TYPES.ACTION]: defaultActionTemplate,
+  [TYPES.DIALOG]: defaultActionTemplate,
 }
 
 /**
@@ -114,4 +116,49 @@ const fileName  = str.substring(index + 1, str.length);
 
   // 拼接
   await writeFile(PrefixPath, defaultTemplate(payload))
+}
+
+/**
+ * 
+ * @param {*} absPath 
+ * @param {*} jsonData 
+ * @param {*} type 
+ * @param {*} options 
+ */
+ export async function handleInsertComponent(absPath, jsonData, type, options) {
+  const PrefixPath = absPath + '/pages' + jsonData.componentsPath;
+  const str = PrefixPath;
+  var index = str.lastIndexOf("\/");  
+ 
+const fileName  = str.substring(index + 1, str.length);
+  // const fileName = PrefixPath.;
+
+  // 1. 创建service
+  const isExist = await getStat(PrefixPath + fileName);
+  if(!isExist) {
+    // 新建路径
+    const stats = await dirExists(PrefixPath.slice(0, index));
+    // // 创建文件，加入默认模板
+    // const file = await writeFile(PrefixPath + fileName, defaultApiTemplate)
+  }
+
+  const {modelName, api} = jsonData;
+
+  const fetchName = `fetch` + urlTransform(jsonData.api.url);
+  const saveName = `save` + urlTransform(jsonData.api.url);
+  const clearName = `clear` + urlTransform(jsonData.api.url);
+  const stateName =  createStateName(urlTransform(jsonData.api.url), type);
+
+  const payload = {
+    modelName, fetchName, clearName, stateName, params: api.params, response: api.response
+  }
+
+  let newCode;
+  
+  if(jsonData.position === 'tableTop') {
+    newCode = await traverseTemplates.traverseActionTop(PrefixPath, jsonData, options, payload);
+  }
+
+  // 拼接
+  await writeFile(PrefixPath, prettify(newCode))
 }
