@@ -1,10 +1,11 @@
 import {getColumnsNew, prettify, getFormItems} from '../../utils/utils';
 
 const text = ({modelName, fetchName, clearName, stateName, params, response}) => `import React, { useRef, useState } from 'react';
-import { Button, Col, Form, Input, Row, Table, Select, Card, message } from 'antd';
+import { Button, Col, Form, Input, Row, Table, Select, Card, message } from '@bass/ui';
 import { useDva, useSearchFormTable } from '@/utils/hooks';
 import { useMount, useUnmount } from 'ahooks';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import MyFormModal from '@/components/MyFormModal/index';
 
 
 const { Option } = Select;
