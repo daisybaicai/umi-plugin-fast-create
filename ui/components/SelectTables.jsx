@@ -10,7 +10,6 @@ function SelectTable({ api }) {
 
   const [type, setType] = useState(null);
 
-
   const [options, setOptions] = useState({});
 
   const handleShow = (record, t) => {
@@ -191,33 +190,47 @@ function SelectTable({ api }) {
             </Form.Item>
             <Form.Item label="params">
               <Form.List name={['api', 'params']}>
-                {(fields, { add, remove }) => (
+                {(fields, { add, remove, move }) => (
                   <>
-                    {fields.map(({ key, name, fieldKey, ...restField }) => (
-                      <Space
-                        key={key}
-                        style={{ display: 'flex', marginBottom: 8 }}
-                        align="baseline"
-                      >
-                        <Form.Item
-                          {...restField}
-                          name={[name, 'name']}
-                          fieldKey={[fieldKey, 'name']}
-                          rules={[{ required: true, message: 'name' }]}
+                    {fields.map(
+                      ({ key, name, fieldKey, ...restField }, index) => (
+                        <Space
+                          key={key}
+                          style={{ display: 'flex', marginBottom: 8 }}
+                          align="baseline"
                         >
-                          <Input placeholder="name" />
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[name, 'description']}
-                          fieldKey={[fieldKey, 'description']}
-                          rules={[{ required: true, message: 'description' }]}
-                        >
-                          <Input placeholder="description" />
-                        </Form.Item>
-                        <span onClick={() => remove(name)}>移除</span>
-                      </Space>
-                    ))}
+                          <Form.Item
+                            {...restField}
+                            name={[name, 'name']}
+                            fieldKey={[fieldKey, 'name']}
+                            rules={[{ required: true, message: 'name' }]}
+                          >
+                            <Input placeholder="name" />
+                          </Form.Item>
+                          <Form.Item
+                            {...restField}
+                            name={[name, 'description']}
+                            fieldKey={[fieldKey, 'description']}
+                            rules={[{ required: true, message: 'description' }]}
+                          >
+                            <Input placeholder="description" />
+                          </Form.Item>
+                          <span onClick={() => remove(name)}>X</span>
+                          <span
+                            onClick={() => move(index, index - 1)}
+                            style={{ cursor: 'pointer' }}
+                          >
+                            ↑
+                          </span>
+                          <span
+                            onClick={() => move(index, index + 1)}
+                            style={{ cursor: 'pointer' }}
+                          >
+                            ↓
+                          </span>
+                        </Space>
+                      ),
+                    )}
                     <Form.Item>
                       <Button type="dashed" onClick={() => add()} block>
                         Add field
@@ -229,33 +242,47 @@ function SelectTable({ api }) {
             </Form.Item>
             <Form.Item label="response">
               <Form.List name={['api', 'response']}>
-                {(fields, { add, remove }) => (
+                {(fields, { add, remove, move }) => (
                   <>
-                    {fields.map(({ key, name, fieldKey, ...restField }) => (
-                      <Space
-                        key={key}
-                        style={{ display: 'flex', marginBottom: 8 }}
-                        align="baseline"
-                      >
-                        <Form.Item
-                          {...restField}
-                          name={[name, 'name']}
-                          fieldKey={[fieldKey, 'name']}
-                          rules={[{ required: true, message: 'name' }]}
+                    {fields.map(
+                      ({ key, name, fieldKey, ...restField }, index) => (
+                        <Space
+                          key={key}
+                          style={{ display: 'flex', marginBottom: 8 }}
+                          align="baseline"
                         >
-                          <Input placeholder="name" />
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[name, 'description']}
-                          fieldKey={[fieldKey, 'description']}
-                          rules={[{ required: true, message: 'description' }]}
-                        >
-                          <Input placeholder="description" />
-                        </Form.Item>
-                        <span onClick={() => remove(name)}>移除</span>
-                      </Space>
-                    ))}
+                          <Form.Item
+                            {...restField}
+                            name={[name, 'name']}
+                            fieldKey={[fieldKey, 'name']}
+                            rules={[{ required: true, message: 'name' }]}
+                          >
+                            <Input placeholder="name" />
+                          </Form.Item>
+                          <Form.Item
+                            {...restField}
+                            name={[name, 'description']}
+                            fieldKey={[fieldKey, 'description']}
+                            rules={[{ required: true, message: 'description' }]}
+                          >
+                            <Input placeholder="description" />
+                          </Form.Item>
+                          <span onClick={() => remove(name)}>X</span>
+                          <span
+                            onClick={() => move(index, index - 1)}
+                            style={{ cursor: 'pointer' }}
+                          >
+                            ↑
+                          </span>
+                          <span
+                            onClick={() => move(index, index + 1)}
+                            style={{ cursor: 'pointer' }}
+                          >
+                            ↓
+                          </span>
+                        </Space>
+                      ),
+                    )}
                     <Form.Item>
                       <Button type="dashed" onClick={() => add()} block>
                         Add field
