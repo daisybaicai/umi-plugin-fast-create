@@ -55,7 +55,7 @@ export async function handleApi(absPath, jsonData) {
  * @param {*} jsonData 
  * @param {*} type
  */
-export async function handleModel(absPath, jsonData, type) {
+export async function handleModel(absPath, jsonData, type, options) {
   const PrefixPath = absPath + '/models/';
   const modelName = jsonData.modelName;
   const fileName = `${modelName}.js`;
@@ -70,7 +70,7 @@ export async function handleModel(absPath, jsonData, type) {
   }
 
   const handleBabelTraverseFunc = strategyEnum[type];
-  const newCode = await handleBabelTraverseFunc(PrefixPath + fileName, jsonData);
+  const newCode = await handleBabelTraverseFunc(PrefixPath + fileName, jsonData, options);
 
   // 拼接
   await writeFile(PrefixPath + fileName, prettify(newCode))

@@ -7,7 +7,7 @@ import template from "@babel/template";
 import { getStat, dirExists, writeFile, readFile } from '../utils/fs';
 import {createStateName, urlTransform} from '../utils/utils';
 
-export async function  handleBabelTraverse(url, jsonData) {
+export async function  handleBabelTraverse(url, jsonData, options) {
   // 读取文件
   const text = await readFile(url);
 
@@ -30,11 +30,11 @@ export async function  handleBabelTraverse(url, jsonData) {
     effects: {
       *${fetchName}({ payload }, { call, put }) {
         const response = yield call(${fetchName}, payload);
-        if (response && response.code === 0) {
+        if (response && response.code === ${options.code}) {
           yield put({
             type: '${saveName}',
             payload: {
-              data: response.data || {},
+              data: response.${options.data} || {},
               pagination: payload || {},
             },
           });
@@ -51,7 +51,7 @@ export async function  handleBabelTraverse(url, jsonData) {
     reducers: {
       ${saveName}(state, { payload }) {
         const { data = {}, pagination = {} } = payload;
-        const { items = [] } = data;
+        const { ${options.items !== 'item'? options.items+':' : ''}items = [] } = data;
         return {
           ...state,
           ${stateName}: {

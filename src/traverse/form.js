@@ -7,7 +7,7 @@ import template from "@babel/template";
 import { getStat, dirExists, writeFile, readFile } from '../utils/fs';
 import {urlTransform} from '../utils/utils';
 
-export async function  handleBabelTraverse(url, jsonData) {
+export async function  handleBabelTraverse(url, jsonData, options) {
   // 读取文件
   const text = await readFile(url);
 
@@ -27,7 +27,7 @@ export async function  handleBabelTraverse(url, jsonData) {
     effects: {
       *${fetchName}({ payload }, { call }) {
         const response = yield call(${fetchName}, payload);
-        if (response && response.code === 0) {
+        if (response && response.code === ${options.code}) {
           return Promise.resolve();
         }
         return Promise.reject(response.message || '请求失败');

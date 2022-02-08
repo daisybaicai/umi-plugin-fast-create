@@ -2,7 +2,7 @@ import { TYPES } from '../../common/enum';
 import { handleApi, handleComponents, handleModel } from '../common';
 
 
-const handleDetail = async (api, text) => {
+const handleDetail = async (api, text, options) => {
   var jsonData = eval('(' + text + ')');
 
   // 类型处理
@@ -13,7 +13,7 @@ const handleDetail = async (api, text) => {
 
   handleApi(absPath, jsonData);
   // 2. 创建model
-  handleModel(absPath, jsonData, TYPES.DETAIL);
+  handleModel(absPath, jsonData, TYPES.DETAIL, options);
   // 3. 创建components
   handleComponents(absPath, jsonData, TYPES.DETAIL);
 };
