@@ -144,8 +144,8 @@ function SelectTable({ api }) {
               return response.json(); // 先将结果转换为 JSON 对象
             })
             .then(data => {
-              api.logger.info('data');
-              api.logger.info(JSON.stringify(data));
+              console.log(JSON.stringify(data));
+              alert(JSON.stringify(data))
               setLocalStorage('swagger-data', JSON.stringify(data));
             })
             .catch(function(error) {
