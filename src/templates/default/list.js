@@ -1,7 +1,7 @@
 import {getColumnsNew, prettify, getFormItems} from '../../utils/utils';
 
 const text = ({modelName, fetchName, clearName, stateName, params, response}) => `import React, { useRef, useState } from 'react';
-import { Button, Col, Form, Input, Row, Table, Select, Card, message } from '@bass/ui';
+import { Button, Col, Form, Input, Row, Table, Select, Card, message, Space } from 'antd';
 import { useDva, useSearchFormTable } from '@/utils/hooks';
 import { useMount, useUnmount } from 'ahooks';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';

@@ -93,7 +93,7 @@ export default async function handleActionTop(url, jsonData, options, moreOption
       }
       const { node } = path;
       // 往指定的里面加入新依赖
-      if (node.source.value === '@baas/ui') {
+      if (node.source.value === 'antd') {
         const names = node.specifiers.map(item => item.imported.name);
         if (!names.includes('Modal')) {
           // 加入新的依赖完成

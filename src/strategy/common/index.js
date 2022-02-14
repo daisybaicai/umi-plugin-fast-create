@@ -161,6 +161,9 @@ const fileName  = str.substring(index + 1, str.length);
   if(jsonData.position === 'modal') {
     newCode = await traverseTemplates.traverseActionModal(PrefixPath, jsonData, options, payload);
   }
+  if(jsonData.position === 'tableColumns') {
+    newCode = await traverseTemplates.traverseActionColumns(PrefixPath, jsonData, options, payload);
+  }
 
   // 拼接
   await writeFile(PrefixPath, prettify(newCode))

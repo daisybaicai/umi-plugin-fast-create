@@ -5,7 +5,7 @@ import * as parser from '@babel/parser';
 import generate from '@babel/generator';
 import template from '@babel/template';
 import { getStat, dirExists, writeFile, readFile } from '../utils/fs';
-import { getFormItemsInForm, urlTransform } from '../utils/utils';
+import { urlTransform } from '../utils/utils';
 
 const payloadInfo = array1 =>
   array1.reduce((prev, cur) => {
@@ -13,17 +13,13 @@ const payloadInfo = array1 =>
     return prev;
   }, {});
 
-export default async function handleActionModal(
+export default async function handleActionColumns(
   url,
   jsonData,
   options,
   moreOptions,
 ) {
   const text = await readFile(url);
-
-  const isCreate = jsonData.dialogFormRef === 'createFormRef';
-  const formRef = jsonData.dialogFormRef;
-  const handleText = isCreate ? '创建' : '编辑';
 
   const {
     modelName,
@@ -41,77 +37,59 @@ export default async function handleActionModal(
 
   let importFlag = 0;
 
-  const isCreateText = `${formRef}?.current?.showModal();`
-  const isEditText = `
-      ${formRef}?.current.showModal();
-      ${formRef}?.current?.formEle.setFieldsValue({
-        ...record,
-      });
-  `
-
-  const temCode = `
-  <Button
-  type="primary"
-  onClick={(record) => {
-    ${isCreate ? isCreateText: isEditText}
-  }}
->
-  ${handleText}
-</Button>
-  `;
-
-
-  const templateAST = parser.parse((temCode),
+  const templateAST = parser.parse(
+    `const node = {
+      title: '操作',
+      render: (_, record) => {
+        return (
+          <a
+          onClick={() => {
+            ${jsonData.handleName}(record);
+          }}
+        >
+          操作
+        </a>
+        )
+      }
+    }
+  `,
     {
       sourceType: 'module',
       plugins: ['jsx'],
     },
   );
 
-  const templatedNode = templateAST.program.body[0].expression;
+  const templatedNode = templateAST.program.body[0].declarations[0].init;
 
   const templateActionCode = `
-  const ${jsonData.handleName} = ({}) => {
-    return dispatch({
-      type: '${modelName}/${fetchName}',
-      payload: {
-        // id: curItem?.id,
-        ...values,
+  const ${jsonData.handleName} = (record) => {
+    Modal.confirm({
+      title: '确定要吗？',
+      content: '关闭。',
+      okText: '确定',
+      cancelText: '取消',
+      onOk: () => {
+        return dispatch({
+          type: '${modelName}/${fetchName}',
+          payload:${JSON.stringify(payloadInfo(params))},
+        })
+          .then(() => {
+            message.success('成功');
+            // run(...p);
+          })
+          .catch((msg) => {
+            message.error(msg);
+          });
       },
-    })
-      .then(() => {
-        ${formRef}.current.hideModal();
-        message.success('${handleText}成功');
-        // run(...p);
-      })
-      .catch((msg) => {
-        message.error(msg);
-      });
+    });
   };`;
-
-  const FormModalCode = `
-  <MyFormModal ref={${formRef}} title="${handleText}" handleSubmit={${jsonData.handleName}}>
-  ${
-    getFormItemsInForm(params)
-  }
-</MyFormModal>
-  `
-  
-
-  const formAst = parser.parse(FormModalCode, {
-    sourceType: 'module',
-    plugins: ['jsx'],
-  });
-
 
   const templateActionAST = parser.parse(templateActionCode, {
     sourceType: 'module',
     plugins: ['jsx'],
   });
 
-  // console.log('e', templateActionAST);
   const templateActionASTCode = templateActionAST.program.body[0];
-  const formAstCode = formAst.program.body[0];
 
   let insertFlag = 1;
 
@@ -137,24 +115,10 @@ export default async function handleActionModal(
         return;
       }
     },
-    JSXElement(path) {
+    VariableDeclarator(path) {
       const { node } = path;
-      // console.log('node', node);
-      if (node.children) {
-        const children = node.children;
-        children.map(n => {
-          if (
-            t.isJSXElement(n) &&
-            n.openingElement.name.name === 'Table' &&
-            insertFlag
-          ) {
-            if (jsonData.position === 'modal') {
-              node.children.unshift(templatedNode);
-            }
-            insertFlag = 0;
-            return;
-          }
-        });
+      if (node.id && node.id.name === 'columns') {
+        node.init.elements.push(templatedNode);
       }
     },
     Program(path) {
@@ -173,20 +137,9 @@ export default async function handleActionModal(
         ) {
           // 创建指定的const方法以及需要的变量
           const body = n.declarations[0].init.body;
-          const newNode = t.variableDeclaration('const', [
-            t.variableDeclarator(
-              t.identifier(formRef),
-              t.identifier('useRef()'),
-            ),
-          ]);
           const len = body.body.length;
-          // 首位
-          body.body.unshift(newNode);
           // 倒数位置
           body.body.splice(len - 2, 0, templateActionASTCode);
-
-          const lastReturn = body.body[body.body.length-1];
-          lastReturn.argument.children.push(formAstCode);
         }
       });
     },
