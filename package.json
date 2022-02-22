@@ -1,7 +1,7 @@
 {
   "name": "umi-plugin-fast-create",
   "main": "lib/index.js",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "快速生成代码文件",
   "authors": {
     "name": "daisybaicai",

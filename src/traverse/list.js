@@ -33,10 +33,7 @@ export async function  handleBabelTraverse(url, jsonData, options) {
         if (response && response.code === ${options.code}) {
           yield put({
             type: '${saveName}',
-            payload: {
-              data: response.${options.data} || {},
-              pagination: payload || {},
-            },
+            payload: response.${options.data} || {}
           });
           return Promise.resolve();
         }
@@ -51,12 +48,12 @@ export async function  handleBabelTraverse(url, jsonData, options) {
     reducers: {
       ${saveName}(state, { payload }) {
         const { data = {}, pagination = {} } = payload;
-        const { ${options.items !== 'item'? options.items+':' : ''}items = [] } = data;
+        const { ${options.items !== 'items'? options.items+':' : ''}items = [] } = data;
         return {
           ...state,
           ${stateName}: {
             ...data,
-            items: addIdNumber(items, pagination),
+            items,
           },
         };
       },
