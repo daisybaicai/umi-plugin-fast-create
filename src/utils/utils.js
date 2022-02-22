@@ -1,5 +1,10 @@
 import prettier from 'prettier';
 
+const titleLower = (str) => {
+  const newStr = str.slice(0,1).toLowerCase() +str.slice(1);
+  return newStr;}
+
+
 export function urlTransform(url, prefix = '/api/v1') {
   const nameArr = url.split(prefix);
   const nameStr = nameArr.length > 1 ? nameArr[1]: nameArr[0]
@@ -7,7 +12,7 @@ export function urlTransform(url, prefix = '/api/v1') {
 }
 
 export function createStateName(url, suffix = 'List') {
-  return url.replace(new RegExp(suffix,'i'), "") + suffix
+  return titleLower(url.replace(new RegExp(suffix,'i'), "") + suffix)
 }
 
 

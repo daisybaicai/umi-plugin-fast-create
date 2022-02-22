@@ -47,7 +47,7 @@ export async function  handleBabelTraverse(url, jsonData, options) {
   const vtm_model = {
     reducers: {
       ${saveName}(state, { payload }) {
-        const { data = {}, pagination = {} } = payload;
+        const { data = {} } = payload;
         const { ${options.items !== 'items'? options.items+':' : ''}items = [] } = data;
         return {
           ...state,
