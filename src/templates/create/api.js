@@ -1,4 +1,4 @@
-import {urlTransform} from '../../utils/utils'
+import {sliceApiUrl, urlTransform} from '../../utils/utils'
 /**
  * 生成api 配置
  * @param payload
@@ -15,7 +15,7 @@ export default function(payload) {
   const getParams = hasparams && upperMethods === 'GET';
 
   let requestUrl = "`${HOST}";
-  requestUrl+=url;
+  requestUrl+= sliceApiUrl(url);
   if(getParams) {
     requestUrl += '?${stringify(params)}';
   }

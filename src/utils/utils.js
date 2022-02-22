@@ -11,6 +11,11 @@ export function urlTransform(url, prefix = '/api/v1') {
   return toHump(nameStr);
 }
 
+export function sliceApiUrl(url, prefix = '/api/v1') {
+  return url.replace(new RegExp(prefix,'i'), "")
+}
+
+
 export function createStateName(url, suffix = 'List') {
   return titleLower(url.replace(new RegExp(suffix,'i'), "") + suffix)
 }
