@@ -7,8 +7,9 @@ const titleLower = (str) => {
 
 export function urlTransform(url, prefix = '/api/v1') {
   const nameArr = url.split(prefix);
-  const nameStr = nameArr.length > 1 ? nameArr[1]: nameArr[0]
-  return toHump(nameStr);
+  const nameStr = nameArr.length > 1 ? nameArr[1]: nameArr[0];
+  const urlSlice = nameStr.replace(/\/$/, "").replace(/\/\:\w+$/, "")
+  return toHump(urlSlice);
 }
 
 export function sliceApiUrl(url, prefix = '/api/v1') {
