@@ -1,11 +1,9 @@
-import fs from 'fs';
+import generate from '@babel/generator';
+import * as parser from '@babel/parser';
 import traverse from '@babel/traverse';
 import * as t from '@babel/types';
-import * as parser from '@babel/parser';
-import generate from '@babel/generator';
-import template from "@babel/template";
-import { getStat, dirExists, writeFile, readFile } from '../utils/fs';
-import {createStateName, urlTransform} from '../utils/utils';
+import { readFile } from '../utils/fs';
+import { createStateName, urlTransform } from '../utils/utils';
 
 export async function  handleBabelTraverse(url, jsonData, options) {
   // 读取文件
@@ -32,8 +30,12 @@ export async function  handleBabelTraverse(url, jsonData, options) {
         const response = yield call(${fetchName}, payload);
         if (response && response.code === ${options.code}) {
           yield put({
-            type: '${saveName}',
-            payload: response.${options.data} || {}
+            type: 'saveList',
+            key: '${stateName}',
+            payload: {
+              data: response.${options.data} || {},
+              pagination: payload || {},
+            },
           });
           return Promise.resolve();
         }
@@ -46,21 +48,18 @@ export async function  handleBabelTraverse(url, jsonData, options) {
   const reducerTemplateText = `
   const vtm_model = {
     reducers: {
-      ${saveName}(state, { payload }) {
-        const { data = {} } = payload;
+      saveList(state, { payload, key = 'list' }) {
+        const { data = {}, pagination = {} } = payload;
         const { ${options.items !== 'items'? options.items+':' : ''}items = [] } = data;
         return {
           ...state,
-          ${stateName}: {
-            ...data,
-            items,
-          },
+          [key]: { ...data, items: addIdNumber(items, pagination, 'pid') },
         };
       },
-      ${clearName}(state) {
+      clearList(state, { key = 'list' }) {
         return {
           ...state,
-          ${stateName}: {},
+          [key]: [],
         };
       },
     }
@@ -188,8 +187,11 @@ export async function  handleBabelTraverse(url, jsonData, options) {
             name: 'reducers',
           })
         ) {
-          const fetchCode = TMPAST.reducerContent;
-          pNode.value.properties.push(fetchCode[0], fetchCode[1])
+          const keys = pNode.value.properties.findIndex(item => item.key.name === 'saveList');
+          if(keys === -1) {
+            const fetchCode = TMPAST.reducerContent;
+            pNode.value.properties.push(fetchCode[0], fetchCode[1])
+          }
         }
       });
     },

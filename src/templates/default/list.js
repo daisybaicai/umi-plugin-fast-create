@@ -1,4 +1,4 @@
-import {getColumnsNew, prettify, getFormItems} from '../../utils/utils';
+import { getColumnsNew, getFormItems, prettify } from '../../utils/utils';
 
 const text = ({modelName, fetchName, clearName, stateName, params, response}) => `import React, { useRef, useState } from 'react';
 import { Button, Col, Form, Input, Row, Table, Select, Card, message, Space } from 'antd';
@@ -33,7 +33,8 @@ const List = () => {
 
   useUnmount(() => {
     dispatch({
-      type: '${modelName}/${clearName}',
+      type: '${modelName}/clearList',
+      key: '${stateName}'
     });
   });
 

@@ -5,14 +5,14 @@ const titleLower = (str) => {
   return newStr;}
 
 
-export function urlTransform(url, prefix = '/api/v1') {
+export function urlTransform(url, prefix = '/api') {
   const nameArr = url.split(prefix);
   const nameStr = nameArr.length > 1 ? nameArr[1]: nameArr[0];
   const urlSlice = nameStr.replace(/\/$/, "").replace(/\/\:\w+$/, "")
   return toHump(urlSlice);
 }
 
-export function sliceApiUrl(url, prefix = '/api/v1') {
+export function sliceApiUrl(url, prefix = '/api') {
   return url.replace(new RegExp(prefix,'i'), "")
 }
 
