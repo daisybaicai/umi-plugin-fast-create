@@ -11,7 +11,7 @@ const handleForm = async (api, text, options) => {
   }
   const absPath = api.paths.absSrcPath;
 
-  handleApi(absPath, jsonData);
+  handleApi(absPath, jsonData, options);
   // 2. 创建model
   handleModel(absPath, jsonData, TYPES.FORM, options);
   // 3. 创建components

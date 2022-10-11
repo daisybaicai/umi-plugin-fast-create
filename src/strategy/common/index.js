@@ -31,7 +31,7 @@ const templatesEnum = {
  * @param {*} absPath 
  * @param {*} jsonData 
  */
-export async function handleApi(absPath, jsonData) {
+export async function handleApi(absPath, jsonData, options) {
   const PrefixPath = absPath + '/services/';
   const fileName = 'api.js';
 
@@ -45,8 +45,9 @@ export async function handleApi(absPath, jsonData) {
   }
 
   const templateContent = await readFile(PrefixPath + fileName);
+  console.log('jsonData', jsonData, options)
 
-  const createApiText = createApi(jsonData.api);
+  const createApiText = createApi(jsonData.api, options);
   // 拼接
   await writeFile(PrefixPath + fileName, prettify(`${templateContent} ${createApiText}`))
 }
