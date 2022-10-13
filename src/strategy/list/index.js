@@ -15,7 +15,9 @@ const handleList =  async (api, text, options) => {
   // 2. 创建model
   handleModel(absPath, jsonData, TYPES.LIST, options)
   // 3. 创建components
-  handleComponents(absPath, jsonData, TYPES.LIST)
+  if(jsonData.isCreate) {
+    handleComponents(absPath, jsonData, TYPES.LIST)
+  }
 };
 
 export default handleList;

@@ -15,7 +15,9 @@ const handleDialog = async (api, text, options) => {
   // 2. 创建model
   handleModel(absPath, jsonData, TYPES.DIALOG, options);
   // 3. 创建components
-  handleInsertComponent(absPath, jsonData, TYPES.DIALOG);
+  if(jsonData.isCreate) {
+    handleInsertComponent(absPath, jsonData, TYPES.DIALOG);
+  }
 };
 
 export default handleDialog;

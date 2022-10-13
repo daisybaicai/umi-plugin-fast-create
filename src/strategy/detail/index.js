@@ -15,7 +15,10 @@ const handleDetail = async (api, text, options) => {
   // 2. 创建model
   handleModel(absPath, jsonData, TYPES.DETAIL, options);
   // 3. 创建components
-  handleComponents(absPath, jsonData, TYPES.DETAIL);
+  if(jsonData.isCreate) {
+    // 3. 创建components
+    handleComponents(absPath, jsonData, TYPES.DETAIL);
+  }
 };
 
 export default handleDetail;

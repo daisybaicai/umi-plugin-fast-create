@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Table, Button, Form, Modal, Input, Space, Select } from 'antd';
+import { Table, Button, Form, Modal, Input, Space, Select, Switch } from 'antd';
 import { getParams, getResponse, getTransformArr } from '../utils/data';
 import { useEffect, useState } from 'react';
 import { getLocalStorage, setLocalStorage } from '../utils/utils';
@@ -199,6 +199,9 @@ function SelectTable({ api }) {
           </Form.Item>
           <Form.Item label="componentsPath" name="componentsPath">
             <Input />
+          </Form.Item>
+          <Form.Item label="isCreate" name="isCreate" valuePropName="checked">
+            <Switch />
           </Form.Item>
           {type === 'dialog' && (
             <>
