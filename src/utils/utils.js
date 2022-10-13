@@ -9,11 +9,22 @@ export function urlTransform(url, prefix = '/api') {
   const nameArr = url.split(prefix);
   const nameStr = nameArr.length > 1 ? nameArr[1]: nameArr[0];
   const urlSlice = nameStr.replace(/\/$/, "").replace(/\/\:\w+$/, "")
-  return toHump(urlSlice);
+
+  // 去除最后可能是{id}形式的文字
+  const resultSlice = urlSlice.replace(/{(\w+)}/, "");
+  // 去除最后可能是/结尾
+  const resultEnd = resultSlice.replace(/\/$/, "");
+  return toHump(resultEnd);
 }
 
 export function sliceApiUrl(url, prefix = '/api') {
-  return url.replace(new RegExp(prefix,'i'), "")
+  // 处理前缀
+  const result = url.replace(new RegExp(prefix,'i'), "");
+  // 处理最后可能是{id}形式的文字
+  const result2 = result.replace(/{(\w+)}/, (_, r) => {
+    return `\${params?.${r}}`;
+  });
+  return result2;
 }
 
 
