@@ -35,7 +35,7 @@ export async function  handleBabelTraverse(url, jsonData, options) {
             type: '${saveName}',
             payload: response.${options.data} || {},
           });
-          return Promise.resolve();
+          return Promise.resolve(response.data || {});
         }
         return Promise.reject(response.message || '请求失败');
       }

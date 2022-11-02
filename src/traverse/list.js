@@ -37,7 +37,7 @@ export async function  handleBabelTraverse(url, jsonData, options) {
               pagination: payload || {},
             },
           });
-          return Promise.resolve();
+          return Promise.resolve(response.data || {});
         }
         return Promise.reject(response.message || '请求失败');
       }
@@ -53,7 +53,7 @@ export async function  handleBabelTraverse(url, jsonData, options) {
         const { ${options.items !== 'items'? options.items+':' : ''}items = [] } = data;
         return {
           ...state,
-          [key]: { ...data, items: addIdNumber(items, pagination, 'pid') },
+          [key]: { ...data, items },
         };
       },
       clearList(state, { key = 'list' }) {
