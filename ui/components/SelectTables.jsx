@@ -130,6 +130,10 @@ function SelectTable({ api }) {
 
   return (
     <>
+      <p>用法：
+        1. 需要在localstorage里面增加一个swagger-data，里面的值需要通过后端的接口的类似http://10.1.42.180:8090/admin/v2/api-docs?group=%E5%90%8E%E5%8F%B0API%E5%88%86%E7%BB%84的接口结果
+      </p>
+      <p>2. 先点击获取options，再填充table</p>
       <Button
         onClick={async () => {
           if (!options?.url) {
