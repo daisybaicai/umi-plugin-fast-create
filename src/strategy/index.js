@@ -14,7 +14,6 @@ const strategy = {
         return handleDetail(api,text, options);
     },
     "list" : function(api,text, options) {
-        // console.log('text1', text);
         return handleList(api,text, options);
     },
     // "api": function(api, text, options) {

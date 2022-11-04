@@ -75,6 +75,7 @@ function SelectTable({ api }) {
           {/* <a onClick={() => handleShow(record, 'api')}>api 生成</a> */}
           {/* <a onClick={() => handleShow(record, 'action')}>columns操作</a>
           <a onClick={() => handleShow(record, 'dialog')}>弹框提问</a> */}
+          <a onClick={() => handleShow(record, 'dialog')}>弹框提问</a>
         </Space>
       ),
       // <a onClick={() => handleShow(record)}>查看</a>,
@@ -208,15 +209,18 @@ function SelectTable({ api }) {
               <Form.Item label="handleName" name="handleName">
                 <Input />
               </Form.Item>
-              <Form.Item label="弹框类型" name="dialogType">
-                <DictCustomSelect data={DIALOG_TYPE} />
+              <Form.Item label="modalParams" name="modalParams">
+                <Input />
               </Form.Item>
-              <Form.Item label="弹框位置" name="position">
-                <DictCustomSelect data={POSITION_TYPE} />
+              <Form.Item label="modalForm" name="modalForm">
+                <Input />
+              </Form.Item>
+              {/* <Form.Item label="弹框类型" name="dialogType">
+                <DictCustomSelect data={DIALOG_TYPE} />
               </Form.Item>
               <Form.Item label="弹框formRef" name="dialogFormRef">
                 <DictCustomSelect data={DIALOG_FORM_REF_TYPE} />
-              </Form.Item>
+              </Form.Item> */}
             </>
           )}
           <Form.Item label="api相关" name="api">

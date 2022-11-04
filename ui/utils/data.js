@@ -29,7 +29,6 @@ export const getTransformArr = obj => {
     };
   });
 
-  // console.log('arr', tagsArr);
 
   return tagsArr;
 };

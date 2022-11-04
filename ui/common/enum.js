@@ -33,8 +33,8 @@ export const DIALOG_FORM_REF_TYPE = {
         code: 'editFormRef',
         desc: '编辑'
     },
-    other: {
-        code: 'other',
-        desc: '其他非弹框'
-    }
+    // other: {
+    //     code: 'other',
+    //     desc: '其他非弹框'
+    // }
 }

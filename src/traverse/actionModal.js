@@ -21,9 +21,8 @@ export default async function handleActionModal(
 ) {
   const text = await readFile(url);
 
-  const isCreate = jsonData.dialogFormRef === 'createFormRef';
-  const formRef = jsonData.dialogFormRef;
-  const handleText = isCreate ? '创建' : '编辑';
+  const _modalParams = jsonData.modalParams;
+  const _modalForm = jsonData.modalForm;
 
   const {
     modelName,
@@ -41,48 +40,18 @@ export default async function handleActionModal(
 
   let importFlag = 0;
 
-  const isCreateText = `${formRef}?.current?.showModal();`
-  const isEditText = `
-      ${formRef}?.current.showModal();
-      ${formRef}?.current?.formEle.setFieldsValue({
-        ...record,
-      });
-  `
-
-  const temCode = `
-  <Button
-  type="primary"
-  onClick={(record) => {
-    ${isCreate ? isCreateText: isEditText}
-  }}
->
-  ${handleText}
-</Button>
-  `;
-
-
-  const templateAST = parser.parse((temCode),
-    {
-      sourceType: 'module',
-      plugins: ['jsx'],
-    },
-  );
-
-  const templatedNode = templateAST.program.body[0].expression;
-
   const templateActionCode = `
   const ${jsonData.handleName} = ({}) => {
     return dispatch({
       type: '${modelName}/${fetchName}',
       payload: {
-        // id: curItem?.id,
         ...values,
       },
     })
       .then(() => {
-        ${formRef}.current.hideModal();
-        message.success('${handleText}成功');
-        // run(...p);
+        ${_modalParams}.hideModal();
+        message.success('提交成功');
+        // 更新代码
       })
       .catch((msg) => {
         message.error(msg);
@@ -90,26 +59,32 @@ export default async function handleActionModal(
   };`;
 
   const FormModalCode = `
-  <MyFormModal ref={${formRef}} title="${handleText}" handleSubmit={${jsonData.handleName}}>
-  ${
-    getFormItemsInForm(params)
-  }
-</MyFormModal>
-  `
-  
+  <Modal
+  width="566px"
+  {...${_modalParams}.modalProps}
+  open={${_modalParams}.visible}
+  title="弹框"
+  onOk={${jsonData.handleName}}
+  bodyStyle={{
+    maxHeight: '600px',
+    overflow: 'auto',
+  }}>
+  <Form form={${_modalForm}}>
+  ${getFormItemsInForm(params)}
+  </Form>
+</Modal>
+  `;
 
   const formAst = parser.parse(FormModalCode, {
     sourceType: 'module',
     plugins: ['jsx'],
   });
 
-
   const templateActionAST = parser.parse(templateActionCode, {
     sourceType: 'module',
     plugins: ['jsx'],
   });
 
-  // console.log('e', templateActionAST);
   const templateActionASTCode = templateActionAST.program.body[0];
   const formAstCode = formAst.program.body[0];
 
@@ -137,26 +112,6 @@ export default async function handleActionModal(
         return;
       }
     },
-    JSXElement(path) {
-      const { node } = path;
-      // console.log('node', node);
-      if (node.children) {
-        const children = node.children;
-        children.map(n => {
-          if (
-            t.isJSXElement(n) &&
-            n.openingElement.name.name === 'Table' &&
-            insertFlag
-          ) {
-            if (jsonData.position === 'modal') {
-              node.children.unshift(templatedNode);
-            }
-            insertFlag = 0;
-            return;
-          }
-        });
-      }
-    },
     Program(path) {
       const { node } = path;
       const nodes = node.body;
@@ -173,19 +128,27 @@ export default async function handleActionModal(
         ) {
           // 创建指定的const方法以及需要的变量
           const body = n.declarations[0].init.body;
-          const newNode = t.variableDeclaration('const', [
+          const newNodeParam = t.variableDeclaration('const', [
             t.variableDeclarator(
-              t.identifier(formRef),
-              t.identifier('useRef()'),
+              t.identifier(_modalParams),
+              t.identifier('useModalParams()'),
+            ),
+          ]);
+          const newNodeForm = t.variableDeclaration('const', [
+            t.variableDeclarator(
+              t.identifier(_modalForm),
+              t.identifier('Form.useForm()'),
             ),
           ]);
           const len = body.body.length;
           // 首位
-          body.body.unshift(newNode);
+          body.body.unshift(newNodeParam);
+          body.body.unshift(newNodeForm);
+
           // 倒数位置
           body.body.splice(len - 2, 0, templateActionASTCode);
 
-          const lastReturn = body.body[body.body.length-1];
+          const lastReturn = body.body[body.body.length - 1];
           lastReturn.argument.children.push(formAstCode);
         }
       });

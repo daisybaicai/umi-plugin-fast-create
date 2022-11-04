@@ -79,7 +79,6 @@ export default async function handleActionTop(url, jsonData, options, moreOption
     plugins: ['jsx'],
   });
 
-  // console.log('e', templateActionAST);
   const templateActionASTCode = templateActionAST.program.body[0];
 
   let insertFlag = 1;
@@ -108,7 +107,6 @@ export default async function handleActionTop(url, jsonData, options, moreOption
     },
     JSXElement(path) {
       const { node } = path;
-      // console.log('node', node);
       if (node.children) {
         const children = node.children;
         children.map(n => {

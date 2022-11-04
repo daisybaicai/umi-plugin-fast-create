@@ -45,7 +45,6 @@ export async function handleApi(absPath, jsonData, options) {
   }
 
   const templateContent = await readFile(PrefixPath + fileName);
-  console.log('jsonData', jsonData, options)
 
   const createApiText = createApi(jsonData.api, options);
   // 拼接
@@ -156,15 +155,17 @@ const fileName  = str.substring(index + 1, str.length);
 
   let newCode;
   
-  if(jsonData.position === 'tableTop') {
-    newCode = await traverseTemplates.traverseActionTop(PrefixPath, jsonData, options, payload);
-  }
-  if(jsonData.position === 'modal') {
-    newCode = await traverseTemplates.traverseActionModal(PrefixPath, jsonData, options, payload);
-  }
-  if(jsonData.position === 'tableColumns') {
-    newCode = await traverseTemplates.traverseActionColumns(PrefixPath, jsonData, options, payload);
-  }
+
+  newCode = await traverseTemplates.traverseActionModal(PrefixPath, jsonData, options, payload);
+
+  // if(jsonData.position === 'tableTop') {
+  //   newCode = await traverseTemplates.traverseActionTop(PrefixPath, jsonData, options, payload);
+  // }
+  // if(jsonData.position === 'modal') {
+  // }
+  // if(jsonData.position === 'tableColumns') {
+  //   newCode = await traverseTemplates.traverseActionColumns(PrefixPath, jsonData, options, payload);
+  // }
 
   // 拼接
   await writeFile(PrefixPath, prettify(newCode))
