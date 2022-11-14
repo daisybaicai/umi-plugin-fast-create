@@ -1,4 +1,5 @@
 import prettier from 'prettier';
+import { FORM_TYPES } from '../common/enum';
 
 const titleLower = (str) => {
   const newStr = str.slice(0,1).toLowerCase() +str.slice(1);
@@ -116,21 +117,70 @@ export function getFormItems(params) {
   return res;
 }
 
+const renderTypes = (item) => {
+  if(item.formType ===  FORM_TYPES.SELECT.code) {
+    return (
+      `
+      <Select placeholder="请选择" style={{ width: '100%' }} >
+        {Object.keys(SELECT_ENUM).map(key => (
+          <Select.Option key={key} value={SELECT_ENUM?.[key]?.code}>
+            {SELECT_ENUM?.[key]?.code}
+          </Select.Option>
+        ))}
+      </Select>
+      `
+    )
+  }
+  if(item.formType ===  FORM_TYPES.RADIO.code) {
+    return (
+      `
+      <Radio.Group options={
+        Object.keys(RADIO_ENUM).map(item => ({
+          label: RADIO_ENUM[item].desc,
+          value: String(RADIO_ENUM[item].code)
+        }))
+      } />
+      `
+    )
+  }
+
+  if(item.formType ===  FORM_TYPES.DATE.code) {
+    return (
+      `
+      <CustomDatePicker type="DATE" />
+      `
+    )
+  }
+
+  if(item.formType ===  FORM_TYPES.FILE.code) {
+    return (
+      `
+        <FileUpload />
+      `
+    )
+  }
+  return `<Input placeholder="请输入" autoComplete="off"/>`
+}
+
+
 /**
  * 转换Form.Items
  * @param {*} params
  */
 export function getFormItemsInForm(params) {
+
   let res = ``;
   params.forEach(item => {
+    let isSelect = item.formType !== FORM_TYPES.INPUT.code ? ', select: true': '';
+
     res += `
     <Form.Item
     name="${item.name}"
     label="${item.description}"
-    rules={getNormalRules('${item.description}', { maxLen: 20 })}
+    rules={getNormalRules('${item.description}', { maxLen: 20, required: true ${isSelect} })}
     validateFirst
   >
-    <Input placeholder="请输入" autoComplete="off" />
+    ${renderTypes(item)}
   </Form.Item>
 `;
   });

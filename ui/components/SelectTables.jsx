@@ -4,7 +4,7 @@ import { getParams, getResponse, getTransformArr } from '../utils/data';
 import { useEffect, useState } from 'react';
 import { getLocalStorage, setLocalStorage } from '../utils/utils';
 import styles from './index.less';
-import { DIALOG_FORM_REF_TYPE, DIALOG_TYPE, POSITION_TYPE } from '../common/enum';
+import { DIALOG_FORM_REF_TYPE, DIALOG_TYPE, POSITION_TYPE, FORM_TYPES } from '../common/enum';
 
 const DictCustomSelect = React.forwardRef(
   ({ data = {}, value = undefined, onChange = () => {} }, ref) => {
@@ -40,8 +40,26 @@ function SelectTable({ api }) {
     }
 
     setVisible(true);
-    const params = getParams(record);
+    let params = getParams(record);
     const response = getResponse(record);
+
+    // 增加默认formType配置项处理
+    if(Array.isArray(params) && params.length > 0) {
+      params = params.map(item => {
+        let result = FORM_TYPES.INPUT.code;
+        if(item.description?.includes("时间")) {
+          result = FORM_TYPES.DATE.code;
+        }
+        if(item.description?.includes("附件")) {
+          result = FORM_TYPES.FILE.code;
+        }
+        
+        return {
+          ...item,
+          formType: result
+        }
+      })
+    }
 
     const {
       ignored: { params: pIg = [], response: rIg = [] },
@@ -264,6 +282,18 @@ function SelectTable({ api }) {
                           >
                             <Input placeholder="description" />
                           </Form.Item>
+                          {
+                            type === 'dialog' || type === 'form' && (
+                              <Form.Item
+                              {...restField}
+                              name={[name, 'formType']}
+                              fieldKey={[fieldKey, 'formType']}
+                              rules={[{ required: true, message: 'formType' }]}
+                            >
+                               <DictCustomSelect data={FORM_TYPES} />
+                            </Form.Item>
+                            )
+                          }
                           <span onClick={() => remove(name)}>X</span>
                           <span
                             onClick={() => move(index, index - 1)}
