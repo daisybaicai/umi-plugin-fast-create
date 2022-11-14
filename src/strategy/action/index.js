@@ -15,7 +15,7 @@ const handleForm = async (api, text, options) => {
   // 2. 创建model
   handleModel(absPath, jsonData, TYPES.ACTION, options);
   // 3. 创建components
-  handleComponents(absPath, jsonData, TYPES.ACTION);
+  handleComponents(absPath, jsonData, TYPES.ACTION, options);
 };
 
 export default handleForm;

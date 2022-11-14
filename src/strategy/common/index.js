@@ -84,7 +84,7 @@ export async function handleModel(absPath, jsonData, type, options) {
  * @param {*} jsonData 
  * @param {*} type
  */
-export async function handleComponents(absPath, jsonData, type) {
+export async function handleComponents(absPath, jsonData, type, options) {
   const PrefixPath = absPath + '/pages' + jsonData.componentsPath;
   const str = PrefixPath;
   var index = str.lastIndexOf("\/");  
@@ -103,10 +103,10 @@ const fileName  = str.substring(index + 1, str.length);
 
   const {modelName, api} = jsonData;
 
-  const fetchName = `fetch` + urlTransform(jsonData.api.url);
-  const saveName = `save` + urlTransform(jsonData.api.url);
-  const clearName = `clear` + urlTransform(jsonData.api.url);
-  const stateName =  createStateName(urlTransform(jsonData.api.url), type);
+  const fetchName = `fetch` + urlTransform(jsonData.api.url, options.prefix);
+  const saveName = `save` + urlTransform(jsonData.api.url, options.prefix);
+  const clearName = `clear` + urlTransform(jsonData.api.url, options.prefix);
+  const stateName =  createStateName(urlTransform(jsonData.api.url, options.prefix), type);
 
   const payload = {
     modelName, fetchName, clearName, stateName, params: api.params, response: api.response
@@ -144,10 +144,10 @@ const fileName  = str.substring(index + 1, str.length);
 
   const {modelName, api} = jsonData;
 
-  const fetchName = `fetch` + urlTransform(jsonData.api.url);
-  const saveName = `save` + urlTransform(jsonData.api.url);
-  const clearName = `clear` + urlTransform(jsonData.api.url);
-  const stateName =  createStateName(urlTransform(jsonData.api.url), type);
+  const fetchName = `fetch` + urlTransform(jsonData.api.url, options.prefix);
+  const saveName = `save` + urlTransform(jsonData.api.url, options.prefix);
+  const clearName = `clear` + urlTransform(jsonData.api.url, options.prefix);
+  const stateName =  createStateName(urlTransform(jsonData.api.url, options.prefix), type);
 
   const payload = {
     modelName, fetchName, clearName, stateName, params: api.params, response: api.response

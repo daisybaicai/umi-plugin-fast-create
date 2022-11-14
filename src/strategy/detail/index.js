@@ -17,7 +17,7 @@ const handleDetail = async (api, text, options) => {
   // 3. 创建components
   if(jsonData.isCreate) {
     // 3. 创建components
-    handleComponents(absPath, jsonData, TYPES.DETAIL);
+    handleComponents(absPath, jsonData, TYPES.DETAIL, options);
   }
 };
 

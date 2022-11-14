@@ -15,7 +15,7 @@ export default function(payload, options) {
   const getParams = hasparams && upperMethods === 'GET';
 
   let requestUrl = "`${HOST}";
-  requestUrl+= sliceApiUrl(url, options?.prefix);
+  requestUrl+= sliceApiUrl(url, options?.prefixHost);
   if(getParams&& url.indexOf('{') === -1) {
     requestUrl += '?${stringify(params)}';
   }

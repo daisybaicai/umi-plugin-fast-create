@@ -16,7 +16,7 @@ const handleList =  async (api, text, options) => {
   handleModel(absPath, jsonData, TYPES.LIST, options)
   // 3. 创建components
   if(jsonData.isCreate) {
-    handleComponents(absPath, jsonData, TYPES.LIST)
+    handleComponents(absPath, jsonData, TYPES.LIST, options)
   }
 };
 

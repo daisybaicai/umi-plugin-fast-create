@@ -16,10 +16,11 @@ export async function  handleBabelTraverse(url, jsonData, options) {
 
   let importFlag = 0;
 
-  const fetchName = `fetch` + urlTransform(jsonData.api.url);
-  const saveName = `save` + urlTransform(jsonData.api.url);
-  const clearName = `clear` + urlTransform(jsonData.api.url);
-  const stateName =  createStateName(urlTransform(jsonData.api.url), 'List');
+  const fetchName = `fetch` + urlTransform(jsonData.api.url, options.prefix);
+
+  const saveName = `save` + urlTransform(jsonData.api.url, options.prefix);
+  const clearName = `clear` + urlTransform(jsonData.api.url, options.prefix);
+  const stateName =  createStateName(urlTransform(jsonData.api.url, options.prefix), 'List');
 
 
   // 替换模板内容然后获取指定内容块

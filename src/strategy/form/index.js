@@ -16,7 +16,7 @@ const handleForm = async (api, text, options) => {
   handleModel(absPath, jsonData, TYPES.FORM, options);
   if(jsonData.isCreate) {
     // 3. 创建components
-    handleComponents(absPath, jsonData, TYPES.FORM);
+    handleComponents(absPath, jsonData, TYPES.FORM, options);
   }
 };
 

@@ -18,7 +18,7 @@ export async function  handleBabelTraverse(url, jsonData, options) {
 
   let importFlag = 0;
 
-  const fetchName = `fetch` + urlTransform(jsonData.api.url);
+  const fetchName = `fetch` + urlTransform(jsonData.api.url, options.prefix);
 
 
   // 替换模板内容然后获取指定内容块
