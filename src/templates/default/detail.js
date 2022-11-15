@@ -38,7 +38,8 @@ const Detail = (props) => {
 
   useUnmount(() => {
     dispatch({
-      type: '${modelName}/${clearName}',
+      type: '${modelName}/clear',
+      key: '${stateName}'
     });
   });
 

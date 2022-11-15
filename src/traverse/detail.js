@@ -19,8 +19,8 @@ export async function  handleBabelTraverse(url, jsonData, options) {
   let importFlag = 0;
 
   const fetchName = `fetch` + urlTransform(jsonData.api.url, options.prefix);
-  const saveName = `save` + urlTransform(jsonData.api.url, options.prefix);
-  const clearName = `clear` + urlTransform(jsonData.api.url, options.prefix);
+  // const saveName = `save` + urlTransform(jsonData.api.url, options.prefix);
+  // const clearName = `clear` + urlTransform(jsonData.api.url, options.prefix);
   const stateName =  createStateName(urlTransform(jsonData.api.url, options.prefix), 'Detail');
 
 
@@ -32,8 +32,9 @@ export async function  handleBabelTraverse(url, jsonData, options) {
         const response = yield call(${fetchName}, payload);
         if (response && response.code === ${options.code}) {
           yield put({
-            type: '${saveName}',
-            payload: response.${options.data} || {},
+            type: 'save',
+            key: '${stateName}',
+            payload: response.data || {},
           });
           return Promise.resolve(response.data || {});
         }
@@ -46,16 +47,16 @@ export async function  handleBabelTraverse(url, jsonData, options) {
   const reducerTemplateText = `
   const vtm_model = {
     reducers: {
-      ${saveName}(state, { payload }) {
+      save(state, { payload, key = 'detail' }) {
         return {
           ...state,
-          ${stateName}: payload,
+          [key]: payload,
         };
       },
-      ${clearName}(state) {
+      clear(state, { key = 'detail' }) {
         return {
           ...state,
-          ${stateName}: {},
+          [key]: [],
         };
       },
     }
@@ -183,8 +184,11 @@ export async function  handleBabelTraverse(url, jsonData, options) {
             name: 'reducers',
           })
         ) {
-          const fetchCode = TMPAST.reducerContent;
-          pNode.value.properties.push(fetchCode[0], fetchCode[1])
+          const keys = pNode.value.properties.findIndex(item => item.key.name === 'save');
+          if(keys === -1) {
+            const fetchCode = TMPAST.reducerContent;
+            pNode.value.properties.push(fetchCode[0], fetchCode[1])
+          }
         }
       });
     },

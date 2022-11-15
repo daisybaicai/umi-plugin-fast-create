@@ -28,7 +28,7 @@ export async function  handleBabelTraverse(url, jsonData, options) {
       *${fetchName}({ payload }, { call }) {
         const response = yield call(${fetchName}, payload);
         if (response && response.code === ${options.code}) {
-          return Promise.resolve();
+          return Promise.resolve(response.data || {});
         }
         return Promise.reject(response.message || '请求失败');
       }

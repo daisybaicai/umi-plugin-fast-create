@@ -9,15 +9,14 @@ const titleLower = str => {
 export function urlTransform(url, prefix = '/api') {
   // const nameArr = url.split(prefix);
   // const nameStr = nameArr.length > 1 ? nameArr[1]: nameArr[0];
-
-  let nameStr = '';
+  let nameStr = url;
   // 处理前缀
   if (Array.isArray(prefix)) {
     prefix.forEach(pKey => {
-      nameStr = url.replace(new RegExp(pKey, 'i'), '');
+      nameStr = nameStr.replace(new RegExp(pKey, 'i'), '');
     });
   } else {
-    nameStr = url.replace(new RegExp(prefix, 'i'), '');
+    nameStr = nameStr.replace(new RegExp(prefix, 'i'), '');
   }
 
   const urlSlice = nameStr.replace(/\/$/, '').replace(/\/\:\w+$/, '');
