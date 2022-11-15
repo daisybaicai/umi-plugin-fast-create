@@ -8,7 +8,7 @@ export default function(payload, options) {
 
   const upperMethods = methods.toUpperCase();
 
-  const functionName = urlTransform(url);
+  const functionName = urlTransform(url, options?.prefix);
 
   const hasparams = Array.isArray(params) && params.length > 0;
 
