@@ -136,7 +136,7 @@ export default async function handleActionModal(
           ]);
           const newNodeForm = t.variableDeclaration('const', [
             t.variableDeclarator(
-              t.identifier(_modalForm),
+              t.identifier(`[${_modalForm}]`),
               t.identifier('Form.useForm()'),
             ),
           ]);
