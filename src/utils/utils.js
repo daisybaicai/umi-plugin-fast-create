@@ -175,7 +175,7 @@ const renderTypes = item => {
  * 转换Form.Items
  * @param {*} params
  */
-export function getFormItemsInForm(params) {
+export function getFormItemsInForm(params, load = true) {
   let res = ``;
   params.forEach(item => {
     let isSelect =
@@ -190,7 +190,19 @@ export function getFormItemsInForm(params) {
     }', { maxLen: 20, required: true ${isSelect} })}
     validateFirst
   >
-    ${renderTypes(item)}
+    ${
+      load ? (
+        `
+        {
+          loadApplyItem(
+            ${renderTypes(item)},
+            operate,
+            ${item.formType !== FORM_TYPES.FILE.code ? `'text'` : `'file'`}
+          )
+        }
+        `
+      ): renderTypes(item)
+    }
   </Form.Item>
 `;
   });

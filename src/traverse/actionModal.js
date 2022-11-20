@@ -23,6 +23,7 @@ export default async function handleActionModal(
 
   const _modalParams = jsonData.modalParams;
   const _modalForm = jsonData.modalForm;
+  const _operate = 'operate';
 
   const {
     modelName,
@@ -70,7 +71,7 @@ export default async function handleActionModal(
     overflow: 'auto',
   }}>
   <Form form={${_modalForm}}>
-  ${getFormItemsInForm(params)}
+  ${getFormItemsInForm(params, jsonData.loadItem)}
   </Form>
 </Modal>
   `;
@@ -128,6 +129,12 @@ export default async function handleActionModal(
         ) {
           // 创建指定的const方法以及需要的变量
           const body = n.declarations[0].init.body;
+          const newOperateParam = t.variableDeclaration('const', [
+            t.variableDeclarator(
+              t.identifier(`[${_operate}]`),
+              t.identifier('useState(true)'),
+            ),
+          ]);
           const newNodeParam = t.variableDeclaration('const', [
             t.variableDeclarator(
               t.identifier(_modalParams),
@@ -142,6 +149,7 @@ export default async function handleActionModal(
           ]);
           const len = body.body.length;
           // 首位
+          body.body.unshift(newOperateParam);
           body.body.unshift(newNodeParam);
           body.body.unshift(newNodeForm);
 

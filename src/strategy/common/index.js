@@ -101,7 +101,7 @@ const fileName  = str.substring(index + 1, str.length);
     // const file = await writeFile(PrefixPath + fileName, defaultApiTemplate)
   }
 
-  const {modelName, api} = jsonData;
+  const {modelName, api, loadItem  = false} = jsonData;
 
   const fetchName = `fetch` + urlTransform(jsonData.api.url, options.prefix);
   const saveName = `save` + urlTransform(jsonData.api.url, options.prefix);
@@ -109,7 +109,7 @@ const fileName  = str.substring(index + 1, str.length);
   const stateName =  createStateName(urlTransform(jsonData.api.url, options.prefix), type);
 
   const payload = {
-    modelName, fetchName, clearName, stateName, params: api.params, response: api.response
+    modelName, fetchName, clearName, stateName, params: api.params, response: api.response, loadItem
   }
 
   const defaultTemplate = templatesEnum[type];
