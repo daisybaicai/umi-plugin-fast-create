@@ -4,7 +4,12 @@ import { getParams, getResponse, getTransformArr } from '../utils/data';
 import { useEffect, useState } from 'react';
 import { getLocalStorage, setLocalStorage } from '../utils/utils';
 import styles from './index.less';
-import { DIALOG_FORM_REF_TYPE, DIALOG_TYPE, POSITION_TYPE, FORM_TYPES } from '../common/enum';
+import {
+  DIALOG_FORM_REF_TYPE,
+  DIALOG_TYPE,
+  POSITION_TYPE,
+  FORM_TYPES,
+} from '../common/enum';
 
 const DictCustomSelect = React.forwardRef(
   ({ data = {}, value = undefined, onChange = () => {} }, ref) => {
@@ -44,21 +49,21 @@ function SelectTable({ api }) {
     const response = getResponse(record);
 
     // 增加默认formType配置项处理
-    if(Array.isArray(params) && params.length > 0) {
+    if (Array.isArray(params) && params.length > 0) {
       params = params.map(item => {
         let result = FORM_TYPES.INPUT.code;
-        if(item.description?.includes("时间")) {
+        if (item.description?.includes('时间')) {
           result = FORM_TYPES.DATE.code;
         }
-        if(item.description?.includes("附件")) {
+        if (item.description?.includes('附件')) {
           result = FORM_TYPES.FILE.code;
         }
-        
+
         return {
           ...item,
-          formType: result
-        }
-      })
+          formType: result,
+        };
+      });
     }
 
     const {
@@ -148,8 +153,9 @@ function SelectTable({ api }) {
 
   return (
     <>
-      <p>用法：
-        1. 需要在localstorage里面增加一个swagger-data，里面的值需要通过后端的接口的类似http://10.1.42.180:8090/admin/v2/api-docs?group=%E5%90%8E%E5%8F%B0API%E5%88%86%E7%BB%84的接口结果
+      <p>
+        用法： 1.
+        需要在localstorage里面增加一个swagger-data，里面的值需要通过后端的接口的类似http://10.1.42.180:8090/admin/v2/api-docs?group=%E5%90%8E%E5%8F%B0API%E5%88%86%E7%BB%84的接口结果
       </p>
       <p>2. 先点击获取options，再填充table</p>
       <Button
@@ -168,7 +174,7 @@ function SelectTable({ api }) {
             })
             .then(data => {
               console.log(JSON.stringify(data));
-              alert(JSON.stringify(data))
+              alert(JSON.stringify(data));
               setLocalStorage('swagger-data', JSON.stringify(data));
             })
             .catch(function(error) {
@@ -217,15 +223,21 @@ function SelectTable({ api }) {
           <Form.Item label="model名称" name="modelName">
             <Input />
           </Form.Item>
-          <Form.Item label="componentsName" name="componentsName">
+          {/* <Form.Item label="componentsName" name="componentsName">
             <Input />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item label="componentsPath" name="componentsPath">
             <Input />
           </Form.Item>
           <Form.Item label="isCreate" name="isCreate" valuePropName="checked">
             <Switch />
           </Form.Item>
+          {type === 'dialog' ||
+            (type === 'form' && (
+              <Form.Item label="loadItem" name="loadItem" valuePropName="checked">
+                <Switch />
+              </Form.Item>
+            ))}
           {type === 'dialog' && (
             <>
               <Form.Item label="handleName" name="handleName">
@@ -282,18 +294,19 @@ function SelectTable({ api }) {
                           >
                             <Input placeholder="description" />
                           </Form.Item>
-                          {
-                            type === 'dialog' || type === 'form' && (
+                          {type === 'dialog' ||
+                            (type === 'form' && (
                               <Form.Item
-                              {...restField}
-                              name={[name, 'formType']}
-                              fieldKey={[fieldKey, 'formType']}
-                              rules={[{ required: true, message: 'formType' }]}
-                            >
-                               <DictCustomSelect data={FORM_TYPES} />
-                            </Form.Item>
-                            )
-                          }
+                                {...restField}
+                                name={[name, 'formType']}
+                                fieldKey={[fieldKey, 'formType']}
+                                rules={[
+                                  { required: true, message: 'formType' },
+                                ]}
+                              >
+                                <DictCustomSelect data={FORM_TYPES} />
+                              </Form.Item>
+                            ))}
                           <span onClick={() => remove(name)}>X</span>
                           <span
                             onClick={() => move(index, index - 1)}
