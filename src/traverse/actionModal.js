@@ -42,24 +42,23 @@ export default async function handleActionModal(
   let importFlag = 0;
 
   const templateActionCode = `
-  const ${jsonData.handleName} = ({}) => {
-      return ${_modalForm}.validateFields().then((values) => {
-        dispatch({
-          type: '${modelName}/${fetchName}',
-          payload: {
-            logo: values?.logo?.[0]?.key || '',
-          },
+  const ${jsonData.handleName} = () => {
+    return ${_modalForm}.validateFields().then((values) => {
+      dispatch({
+        type: '${modelName}/${fetchName}',
+        payload: {
+          ...values,
+        },
+      })
+        .then(() => {
+          message.success('提交成功');
+          ${_modalParams}.hideModal();
+          submit();
         })
-          .then(() => {
-            ${_modalParams}.hideModal();
-            message.success('提交成功');
-            // 更新代码
-          })
-          .catch((err) => {
-            message.error(err);
-          });
-      });
-    };
+        .catch((err) => {
+          message.error(err);
+        });
+    });
   };`;
 
   const FormModalCode = `
