@@ -229,27 +229,22 @@ export function getFormItemsInForm(params, load = true) {
  * @param {*} response
  * @returns
  */
-export function getDetailInfos(response) {
-  const res = [];
+export function getDetailInfos(response, stateName) {
+  let result = ``;
   if (Array.isArray(response)) {
-    response.forEach(item => {
-      res.push({
-        name: item.description,
-        value: `data?.${item.name}`,
-      });
-    });
+      response.forEach((item, index, arr) => {
+result += `{
+            name: '${item.description}',
+            value: ${stateName}?.${item.name},
+          }${index !== arr.length - 1 ? ',' : ''}`;
+    })
   }
 
-  const cardInfo = [
-    {
-      title: '详情信息',
-      children: res,
-    },
-  ];
-
   const text = `
-    const cardInfo = ${JSON.stringify(cardInfo)}
+    const cardInfo = [
+      ${result}
+    ]
   `;
 
-  return text;
+  return prettify(text);
 }

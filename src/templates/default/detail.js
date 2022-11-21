@@ -10,7 +10,6 @@ import { Button, Col, Form, Input, Row, Select, Card, message } from 'antd';
 import { useDva } from '@/utils/hooks';
 import { useMount, useUnmount } from 'ahooks';
 import { PageContainer } from '@ant-design/pro-layout';
-import InfoContent from '@/components/InfoContent';
 
 
 const { Option } = Select;
@@ -44,13 +43,19 @@ const Detail = (props) => {
   });
 
   ${
-    getDetailInfos(response)
+    getDetailInfos(response, stateName)
   }
 
   return (
     <PageContainer breadcrumb={null} title="详情">
       <Card bordered={false}>
-        <InfoContent data={cardInfo} />
+      <Descriptions title="User Info">
+        {
+          cardInfo?.map(item => (
+            <Descriptions.Item label={item.name} key={item.name}>{item.value}</Descriptions.Item>
+          ))
+        }
+      </Descriptions>
       </Card>
     </PageContainer>
   );
