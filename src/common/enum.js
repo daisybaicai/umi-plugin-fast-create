@@ -23,6 +23,10 @@ export const FORM_TYPES = {
         code: 'DATE',
         desc: '时间选择器'
     },
+    TIME: {
+        code: 'TIME',
+        desc: '日时分选择器'
+    },
     FILE: {
         code: 'FILE',
         desc: '文件'

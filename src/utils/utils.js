@@ -159,7 +159,22 @@ const renderTypes = item => {
 
   if (item.formType === FORM_TYPES.DATE.code) {
     return `
-      <CustomDatePicker type="DATE" />
+      <CustomDatePicker type="" />
+      `;
+  }
+  if (item.formType === FORM_TYPES.TIME.code) {
+    return `
+      <CustomDatePicker 
+        picker="date"
+        format="YYYY-MM-DD HH:mm"
+        showTime={{
+          defaultValue: moment('00:00:00', 'HH:mm:ss'),
+          format: 'YYYY-MM-DD HH:mm',
+        }}
+        type="DATE"
+        disabledAfter
+        transferEndTime={false}
+      />
       `;
   }
 
