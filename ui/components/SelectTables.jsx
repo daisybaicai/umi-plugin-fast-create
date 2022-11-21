@@ -232,12 +232,11 @@ function SelectTable({ api }) {
           <Form.Item label="isCreate" name="isCreate" valuePropName="checked">
             <Switch />
           </Form.Item>
-          {type === 'dialog' ||
-            (type === 'form' && (
-              <Form.Item label="loadItem" name="loadItem" valuePropName="checked">
-                <Switch />
-              </Form.Item>
-            ))}
+          {(type === 'dialog' || type === 'form') && (
+            <Form.Item label="loadItem" name="loadItem" valuePropName="checked">
+              <Switch />
+            </Form.Item>
+          )}
           {type === 'dialog' && (
             <>
               <Form.Item label="handleName" name="handleName">
@@ -294,19 +293,16 @@ function SelectTable({ api }) {
                           >
                             <Input placeholder="description" />
                           </Form.Item>
-                          {type === 'dialog' ||
-                            (type === 'form' && (
-                              <Form.Item
-                                {...restField}
-                                name={[name, 'formType']}
-                                fieldKey={[fieldKey, 'formType']}
-                                rules={[
-                                  { required: true, message: 'formType' },
-                                ]}
-                              >
-                                <DictCustomSelect data={FORM_TYPES} />
-                              </Form.Item>
-                            ))}
+                          {(type === 'dialog' || type === 'form') && (
+                            <Form.Item
+                              {...restField}
+                              name={[name, 'formType']}
+                              fieldKey={[fieldKey, 'formType']}
+                              rules={[{ required: true, message: 'formType' }]}
+                            >
+                              <DictCustomSelect data={FORM_TYPES} />
+                            </Form.Item>
+                          )}
                           <span onClick={() => remove(name)}>X</span>
                           <span
                             onClick={() => move(index, index - 1)}
