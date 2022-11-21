@@ -9,7 +9,7 @@ const text = ({modelName, fetchName, clearName, stateName, params, response}) =>
 import { Button, Col, Form, Input, Row, Select, Card, message } from 'antd';
 import { useDva } from '@/utils/hooks';
 import { useMount, useUnmount } from 'ahooks';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import { PageContainer } from '@ant-design/pro-layout';
 import InfoContent from '@/components/InfoContent';
 
 
@@ -48,11 +48,11 @@ const Detail = (props) => {
   }
 
   return (
-    <PageHeaderWrapper breadcrumb={null} title="详情">
+    <PageContainer breadcrumb={null} title="详情">
       <Card bordered={false}>
         <InfoContent data={cardInfo} />
       </Card>
-    </PageHeaderWrapper>
+    </PageContainer>
   );
 };
 

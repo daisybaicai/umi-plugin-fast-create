@@ -1,7 +1,7 @@
 import {getColumns, prettify, getFormItemsInForm} from '../../utils/utils';
 
 const text = ({modelName, fetchName, params, response, loadItem = false}) => `import React, {useState} from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import { PageContainer } from '@ant-design/pro-layout';
 import { Button, Form, Input, message } from 'antd';
 import { useDva } from '@/utils/hooks';
 import { getNormalRules } from '@/common/project';
@@ -35,7 +35,7 @@ export default function () {
 
 
   return (
-    <PageHeaderWrapper breadcrumb={null} title="表单">
+    <PageContainer breadcrumb={null} title="表单">
         <div >
           <Form
             {...formItemLayout}
@@ -53,7 +53,7 @@ export default function () {
             </Form.Item>
           </Form>
         </div>
-    </PageHeaderWrapper>
+    </PageContainer>
   );
 }
 
