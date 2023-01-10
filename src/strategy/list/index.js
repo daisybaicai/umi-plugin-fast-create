@@ -12,8 +12,10 @@ const handleList =  async (api, text, options) => {
   const absPath = api.paths.absSrcPath;
 
   handleApi(absPath, jsonData, options);
+
+  // 创建默认template useRequest 模板
   // 2. 创建model
-  handleModel(absPath, jsonData, TYPES.LIST, options)
+  // handleModel(absPath, jsonData, TYPES.LIST, options)
   // 3. 创建components
   if(jsonData.isCreate) {
     handleComponents(absPath, jsonData, TYPES.LIST, options)

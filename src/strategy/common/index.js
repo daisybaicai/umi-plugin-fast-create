@@ -101,15 +101,15 @@ const fileName  = str.substring(index + 1, str.length);
     // const file = await writeFile(PrefixPath + fileName, defaultApiTemplate)
   }
 
-  const {modelName, api, loadItem  = false} = jsonData;
+  const {api, loadItem  = false} = jsonData;
 
   const fetchName = `fetch` + urlTransform(jsonData.api.url, options.prefix);
-  const saveName = `save` + urlTransform(jsonData.api.url, options.prefix);
-  const clearName = `clear` + urlTransform(jsonData.api.url, options.prefix);
-  const stateName =  createStateName(urlTransform(jsonData.api.url, options.prefix), type);
+  // const saveName = `save` + urlTransform(jsonData.api.url, options.prefix);
+  // const clearName = `clear` + urlTransform(jsonData.api.url, options.prefix);
+  // const stateName =  createStateName(urlTransform(jsonData.api.url, options.prefix), type);
 
   const payload = {
-    modelName, fetchName, clearName, stateName, params: api.params, response: api.response, loadItem
+    fetchName, params: api.params, response: api.response, loadItem
   }
 
   const defaultTemplate = templatesEnum[type];
@@ -142,15 +142,15 @@ const fileName  = str.substring(index + 1, str.length);
     // const file = await writeFile(PrefixPath + fileName, defaultApiTemplate)
   }
 
-  const {modelName, api} = jsonData;
+  const {api} = jsonData;
 
   const fetchName = `fetch` + urlTransform(jsonData.api.url, options.prefix);
-  const saveName = `save` + urlTransform(jsonData.api.url, options.prefix);
-  const clearName = `clear` + urlTransform(jsonData.api.url, options.prefix);
-  const stateName =  createStateName(urlTransform(jsonData.api.url, options.prefix), type);
+  // const saveName = `save` + urlTransform(jsonData.api.url, options.prefix);
+  // const clearName = `clear` + urlTransform(jsonData.api.url, options.prefix);
+  // const stateName =  createStateName(urlTransform(jsonData.api.url, options.prefix), type);
 
   const payload = {
-    modelName, fetchName, clearName, stateName, params: api.params, response: api.response
+     fetchName, params: api.params, response: api.response
   }
 
   let newCode;

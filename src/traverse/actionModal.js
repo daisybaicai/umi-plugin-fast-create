@@ -7,11 +7,6 @@ import template from '@babel/template';
 import { getStat, dirExists, writeFile, readFile } from '../utils/fs';
 import { getFormItemsInForm, urlTransform } from '../utils/utils';
 
-const payloadInfo = array1 =>
-  array1.reduce((prev, cur) => {
-    prev[cur.name] = `params.${cur.name}`;
-    return prev;
-  }, {});
 
 export default async function handleActionModal(
   url,
@@ -26,10 +21,10 @@ export default async function handleActionModal(
   const _operate = 'operate';
 
   const {
-    modelName,
+    // modelName,
     fetchName,
-    clearName,
-    stateName,
+    // clearName,
+    // stateName,
     params,
     response,
   } = moreOptions;
@@ -41,24 +36,20 @@ export default async function handleActionModal(
 
   let importFlag = 0;
 
-  const templateActionCode = `
+  
+
+  const templateActionCode = `  
   const ${jsonData.handleName} = () => {
     return ${_modalForm}.validateFields().then((values) => {
-      dispatch({
-        type: '${modelName}/${fetchName}',
-        payload: {
-          ...values,
-        },
+      submitForm(payload).then(res => {
+        if(res && res.code === 0) {
+          setData(res.data);
+          message.success(res.msg);
+        } else {
+          message.error(res?.msg);
+        }
       })
-        .then(() => {
-          message.success('提交成功');
-          ${_modalParams}.hideModal();
-          submit();
-        })
-        .catch((err) => {
-          message.error(err);
-        });
-    });
+    })
   };`;
 
   const FormModalCode = `
@@ -83,15 +74,19 @@ export default async function handleActionModal(
     plugins: ['jsx'],
   });
 
+
   const templateActionAST = parser.parse(templateActionCode, {
     sourceType: 'module',
     plugins: ['jsx'],
   });
 
+
+
   const templateActionASTCode = templateActionAST.program.body[0];
   const formAstCode = formAst.program.body[0];
 
   let insertFlag = 1;
+
 
   traverse(ast, {
     // path表示当前访问的路径，path.node就能取到当前访问的Node.
@@ -101,6 +96,16 @@ export default async function handleActionModal(
         return;
       }
       const { node } = path;
+      // 往指定的里面加入新依赖
+      if (node.source.value === '@/services/api') {
+        // 加入新的依赖 ！ 完成
+        const newNode = t.importSpecifier(
+          t.identifier(fetchName),
+          t.identifier(fetchName),
+        );
+        node.specifiers.push(newNode);
+        return;
+      }
       // 往指定的里面加入新依赖
       if (node.source.value === 'antd') {
         const names = node.specifiers.map(item => item.imported.name);
@@ -117,6 +122,26 @@ export default async function handleActionModal(
     },
     Program(path) {
       const { node } = path;
+      const nodeLists = path.node.body;
+      // 遍历看有没有，如果没有就加入默认的
+      const flag = nodeLists.some(item => {
+        return (
+          t.isImportDeclaration(item) && item.source.value === '@/services/api'
+        );
+      });
+      if (!flag) {
+        const importNode = t.importDeclaration(
+          [
+            t.importSpecifier(
+              t.identifier(fetchName),
+              t.identifier(fetchName),
+            ),
+          ],
+          t.stringLiteral('@/services/api'),
+        );
+        importFlag = 1;
+        path.node.body.unshift(importNode);
+      }
       const nodes = node.body;
       let curName;
       nodes.map(n => {
@@ -137,6 +162,14 @@ export default async function handleActionModal(
               t.identifier('useState(true)'),
             ),
           ]);
+
+          const newFormParam = t.variableDeclaration('const', [
+            t.variableDeclarator(
+              t.identifier(`{run: submitForm}`),
+              t.identifier(`useRequest(${fetchName}, { manual: true })`),
+            ),
+          ]);
+
           const newNodeParam = t.variableDeclaration('const', [
             t.variableDeclarator(
               t.identifier(_modalParams),
@@ -152,6 +185,7 @@ export default async function handleActionModal(
           const len = body.body.length;
           // 首位
           body.body.unshift(newOperateParam);
+          body.body.unshift(newFormParam);
           body.body.unshift(newNodeParam);
           body.body.unshift(newNodeForm);
 

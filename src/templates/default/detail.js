@@ -1,49 +1,34 @@
-import { getColumns, prettify, getDetailInfos } from '../../utils/utils';
-
-const payloadInfo = (array1) => array1.reduce((prev, cur) => {
-	prev[cur.name] = `params.${cur.name}`;
-  	return prev;
-}, {})
+import { getColumns, prettify, getDetailInfos, getDetailParams } from '../../utils/utils';
 
 const text = ({modelName, fetchName, clearName, stateName, params, response}) => `import React from 'react';
-import { Button, Col, Form, Input, Row, Select, Card, message } from 'antd';
-import { useDva } from '@/utils/hooks';
-import { useMount, useUnmount } from 'ahooks';
+import { Button, Col, Form, Row, Card, message, Descriptions  } from 'antd';
+import { useMount, useRequest} from 'ahooks';
 import { PageContainer } from '@ant-design/pro-layout';
+import { ${fetchName} } from '@/services/api';
 
 
-const { Option } = Select;
 const Detail = (props) => {
-  const {
-    dispatch,
-    data: {
-      ${modelName}: { ${stateName} = {} },
-    },
-  } = useDva({ loading: '${modelName}/${fetchName}' }, ['${modelName}']);
-
   const {
     match: { params },
   } = props;
 
+  const { run: getDetail } = useRequest(${fetchName}, { manual: true });
+  const [data, setData] = useState({});
+
   useMount(() => {
-    dispatch({
-      type: '${modelName}/${fetchName}',
-      payload: ${JSON.stringify(payloadInfo(params))}
-    }).catch((err) => {
-      message.error(err);
-    });
+    getDetail({
+      ${getDetailParams(params)}
+    }
+    ).then(res => {
+      if(res && res.code === 0) {
+        setData(res.data)
+      }
+    })
   });
 
-
-  useUnmount(() => {
-    dispatch({
-      type: '${modelName}/clear',
-      key: '${stateName}'
-    });
-  });
 
   ${
-    getDetailInfos(response, stateName)
+    getDetailInfos(response, 'data')
   }
 
   return (

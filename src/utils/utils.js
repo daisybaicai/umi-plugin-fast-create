@@ -248,3 +248,20 @@ result += `{
 
   return prettify(text);
 }
+
+/**
+ * 处理详情参数
+ * @param {*} response
+ * @returns
+ */
+export function getDetailParams(params) {
+  let result = ``;
+  if (Array.isArray(params)) {
+    params.forEach((item, index, arr) => {
+    result += `
+      ${item.name}: params?.${item.name}${index !== arr.length - 1 ? ',' : ''}`;
+    })
+  }
+
+  return result;
+}

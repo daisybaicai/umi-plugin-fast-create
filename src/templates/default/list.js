@@ -2,50 +2,41 @@ import { getColumnsNew, getFormItems, prettify } from '../../utils/utils';
 
 const text = ({modelName, fetchName, clearName, stateName, params, response}) => `import React, { useRef, useState } from 'react';
 import { Button, Col, Form, Input, Row, Table, Select, Card, message, Space } from 'antd';
-import { useDva, useSearchFormTable, useModalParams } from '@/utils/hooks';
-import { useMount, useUnmount } from 'ahooks';
+import { useSearchFormTable } from '@/utils/hooks';
+import { useRequest } from 'ahooks';
 import { PageContainer } from '@ant-design/pro-layout';
-import { getNormalRules } from '@/common/project';
-import loadApplyItem from '@/ApplyItem/loadApplyItem';
+import { ${fetchName} } from '@/services/api';
 
 const { Option } = Select;
 const List = () => {
-  const {
-    dispatch,
-    data: {
-      ${modelName}: { ${stateName} = {} },
-    },
-  } = useDva({ loading: '${modelName}/${fetchName}' }, ['${modelName}']);
-
   const [form] = Form.useForm();
+  const [list, setList] = useState([]);
 
+  const { run: getList } = useRequest(${fetchName}, { manual: true });
   const getTableData = ({ current, pageSize }, formData) => {
     const payload = {
       pageNum: current,
       pageSize,
       ...formData,
     };
-    return dispatch({
-      type: '${modelName}/${fetchName}',
-      payload,
-    });
+    return getList(payload);
   };
-
-  useUnmount(() => {
-    dispatch({
-      type: '${modelName}/clearList',
-      key: '${stateName}'
-    });
-  });
 
   const { tableProps, search } = useSearchFormTable(getTableData, {
     form,
-    total: ${stateName}.total,
-    dataSource: ${stateName}.items,
+    total: list.total,
+    dataSource: list.items,
     format: true,
     manual: false,
     onError: (err) => {
       message.error(err);
+    },
+    onSuccess: (res) => {
+      if(res && res.code === 0) {
+        setList(res.data)
+        return;
+      }
+      setList([]);
     },
     defaultParams: [
       {
@@ -101,6 +92,7 @@ const List = () => {
           }}
           columns={columns}
           {...tableProps}
+          rowKey={record => record.id}
         />
       </Card>
     </PageContainer>

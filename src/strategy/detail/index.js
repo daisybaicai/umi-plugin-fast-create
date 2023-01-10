@@ -12,8 +12,8 @@ const handleDetail = async (api, text, options) => {
   const absPath = api.paths.absSrcPath;
 
   handleApi(absPath, jsonData, options);
-  // 2. 创建model
-  handleModel(absPath, jsonData, TYPES.DETAIL, options);
+  // // 2. 创建model
+  // handleModel(absPath, jsonData, TYPES.DETAIL, options);
   // 3. 创建components
   if(jsonData.isCreate) {
     // 3. 创建components

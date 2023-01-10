@@ -220,17 +220,17 @@ function SelectTable({ api }) {
         onCancel={() => setVisible(false)}
       >
         <Form form={form}>
-          <Form.Item label="model名称" name="modelName">
+          {/* <Form.Item label="model名称" name="modelName">
             <Input />
-          </Form.Item>
+          </Form.Item> */}
           {/* <Form.Item label="componentsName" name="componentsName">
             <Input />
           </Form.Item> */}
-          <Form.Item label="componentsPath" name="componentsPath">
-            <Input />
-          </Form.Item>
           <Form.Item label="isCreate" name="isCreate" valuePropName="checked">
             <Switch />
+          </Form.Item>
+          <Form.Item label="componentsPath" name="componentsPath">
+            <Input />
           </Form.Item>
           {(type === 'dialog' || type === 'form') && (
             <Form.Item label="loadItem" name="loadItem" valuePropName="checked">

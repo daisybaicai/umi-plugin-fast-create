@@ -3,9 +3,10 @@ import {getColumns, prettify, getFormItemsInForm} from '../../utils/utils';
 const text = ({modelName, fetchName, params, response, loadItem = false}) => `import React, {useState} from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Button, Form, Input, message } from 'antd';
-import { useDva } from '@/utils/hooks';
+import { useRequest } from 'ahooks';
 import { getNormalRules } from '@/common/project';
 import loadApplyItem from '@/ApplyItem/loadApplyItem';
+import { ${fetchName} } from '@/services/api';
 
 const formItemLayout = {
   labelCol: { span: 8 },
@@ -13,24 +14,20 @@ const formItemLayout = {
 };
 
 export default function () {
-  const {
-    dispatch,
-    loadings: { loading },
-  } = useDva({ loading: '${modelName}/${fetchName}' });
   const [form] = Form.useForm();
   const [operate] = useState(true);
 
+  const { run: submitForm, loading } = useRequest(${fetchName}, { manual: true });
+
   const onFinish = (values) => {
-    dispatch({
-      type: '${modelName}/${fetchName}',
-      payload: values,
+    submitForm(payload).then(res => {
+      if(res && res.code === 0) {
+        setData(res.data);
+        message.success(res.msg);
+      } else {
+        message.error(res?.msg);
+      }
     })
-      .then((msg) => {
-        message.success(msg);
-      })
-      .catch((err) => {
-        message.error(err);
-      });
   };
 
 

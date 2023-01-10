@@ -11,10 +11,12 @@ const handleDialog = async (api, text, options) => {
   }
   const absPath = api.paths.absSrcPath;
 
+  console.log('handleApi')
   handleApi(absPath, jsonData, options);
   // 2. 创建model
-  handleModel(absPath, jsonData, TYPES.DIALOG, options);
+  // handleModel(absPath, jsonData, TYPES.DIALOG, options);
   // 3. 创建components
+  console.log('isCreate')
   if(jsonData.isCreate) {
     handleInsertComponent(absPath, jsonData, TYPES.DIALOG, options);
   }
